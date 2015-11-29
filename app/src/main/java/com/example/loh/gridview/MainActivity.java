@@ -158,8 +158,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             Adapter_box.ViewHolder holder = (Adapter_box.ViewHolder) view.getTag();
             flip(holder.back, holder.front, 1000);
             move(holder.front);
-            final MediaPlayer c = MediaPlayer.create(this, R.raw.flip_card);
-            c.start();
             clickable = false;
 
 
@@ -169,6 +167,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
                 @Override
                 public void run() {
+
+                    final MediaPlayer c = MediaPlayer.create(getApplicationContext(), R.raw.congrats);
+                    c.start();
 
                     for (int x = 0; x < myGrid.getChildCount(); x++) {
                         Adapter_box.ViewHolder holders = (Adapter_box.ViewHolder) myGrid.getChildAt(x).getTag();
@@ -189,7 +190,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     start.setVisibility(View.VISIBLE);
                     start.setText("Replay");
                 }
-            }, 2000);
+            }, 1500);
 
         }
     }
