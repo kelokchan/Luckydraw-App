@@ -1,0 +1,19 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/x9"
+        android:title="@string/x9"
+        android:showAsAction="withText"
+        app:showAsAction="withText" />
+    <item
+        android:id="@+id/x12"
+        android:title="@string/x12"
+        android:showAsAction="withText"
+        app:showAsAction="withText" />
+    <item
+        android:id="@+id/x15"
+        android:title="@string/x15"
+        android:showAsAction="withText"
+        app:showAsAction="withText" />
+
+</menu>

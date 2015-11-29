@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">GridView</string>
+    <string name="action_about">more</string>
+    <string name="x9">x9</string>
+    <string name="x12">x12</string>
+    <string name="x15">x15</string>
+</resources>

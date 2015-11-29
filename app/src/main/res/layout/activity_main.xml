@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.loh.gridview.MainActivity"
+    android:id="@+id/gridView_layout"
+    android:clipChildren="false">
+
+    <pl.droidsonroids.gif.GifImageView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:id="@+id/congratsImageView"
+        android:foregroundGravity="top"
+        android:src="@drawable/congratulations_animated"
+        android:layout_marginTop="10dp"
+        android:visibility="gone"
+        android:layout_alignParentTop="true" />
+
+    <GridView
+        android:id="@+id/gridView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawSelectorOnTop="true"
+        android:numColumns="auto_fit"
+        android:stretchMode="spacingWidthUniform"
+        android:horizontalSpacing="5dp"
+        android:verticalSpacing="5dp"
+        android:focusable="true"
+        android:clickable="false"
+        android:clipChildren="false"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp" />
+
+
+
+    <pl.droidsonroids.gif.GifImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/firework2"
+        android:id="@+id/gifImageView"
+        android:visibility="gone"
+        android:layout_centerHorizontal="true"
+        />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="start"
+        android:id="@+id/start"
+        android:layout_above="@+id/button1"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="front"
+        android:id="@+id/button1"
+        android:clipChildren="false"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:visibility="gone"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="back"
+        android:id="@+id/button2"
+        android:clipChildren="false"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:visibility="gone"/>
+</RelativeLayout>
