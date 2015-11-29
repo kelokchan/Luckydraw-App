@@ -51,7 +51,7 @@
         android:id="@+id/start"
         android:layout_above="@+id/button1"
         android:layout_centerHorizontal="true"
-        android:visibility="gone"/>
+        android:visibility="visible"/>
 
     <Button
         android:layout_width="wrap_content"
@@ -61,7 +61,7 @@
         android:clipChildren="false"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:visibility="gone"/>
+        android:visibility="visible"/>
 
     <Button
         android:layout_width="wrap_content"
@@ -71,5 +71,5 @@
         android:clipChildren="false"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:visibility="gone"/>
+        android:visibility="visible"/>
 </RelativeLayout>

@@ -21,7 +21,6 @@ import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
@@ -108,6 +107,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             public void onClick(View v) {
 
                 gifImageView.setVisibility(View.GONE);
+                congratsImageView.setAnimation(null);
                 congratsImageView.setVisibility(View.GONE);
 
                 for (int x = 0; x < myGrid.getChildCount(); x++) {
