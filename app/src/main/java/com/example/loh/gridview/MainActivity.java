@@ -190,7 +190,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     start.setVisibility(View.VISIBLE);
                     start.setText("Replay");
                 }
-            }, 1500);
+            }, 1000);
 
         }
     }
