@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     tools:context="com.example.loh.gridview.MainActivity"
     android:id="@+id/gridView_layout"
-    android:clipChildren="false">
+    android:clipChildren="false"
+    android:padding="5dp">
 
     <pl.droidsonroids.gif.GifImageView
         android:layout_width="match_parent"
@@ -56,7 +57,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="front"
+        android:text="Change prize photo"
         android:id="@+id/button1"
         android:clipChildren="false"
         android:layout_alignParentBottom="true"
@@ -66,7 +67,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="back"
+        android:text="Change back photo"
         android:id="@+id/button2"
         android:clipChildren="false"
         android:layout_alignParentBottom="true"

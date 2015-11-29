@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             public void onClick(View v) {
                 PhotoPickerIntent intent = new PhotoPickerIntent(MainActivity.this);
                 intent.setPhotoCount(numberOfCards);
-                intent.setShowCamera(false);
+                intent.setShowCamera(true);
                 intent.setShowGif(false);
                 startActivityForResult(intent, 100);
             }
@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             public void onClick(View v) {
                 PhotoPickerIntent intent = new PhotoPickerIntent(MainActivity.this);
                 intent.setPhotoCount(1);
-                intent.setShowCamera(false);
+                intent.setShowCamera(true);
                 intent.setShowGif(false);
                 startActivityForResult(intent, 200);
             }
