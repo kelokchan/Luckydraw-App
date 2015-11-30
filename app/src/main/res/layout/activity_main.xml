@@ -6,7 +6,8 @@
     tools:context="com.example.loh.gridview.MainActivity"
     android:id="@+id/gridView_layout"
     android:clipChildren="false"
-    android:padding="5dp">
+    android:padding="5dp"
+    android:animateLayoutChanges="false">
 
     <pl.droidsonroids.gif.GifImageView
         android:layout_width="match_parent"
@@ -46,15 +47,6 @@
         />
 
     <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="start"
-        android:id="@+id/start"
-        android:layout_above="@+id/button1"
-        android:layout_centerHorizontal="true"
-        android:visibility="visible"/>
-
-    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Change prize photo"
@@ -73,4 +65,18 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
         android:visibility="visible"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="16dp"
+        android:layout_alignParentBottom="true"
+        android:src="@android:drawable/ic_media_play"
+        android:id="@+id/start"
+        android:focusable="true"
+        android:animateLayoutChanges="true"
+        android:clickable="true"
+        android:cropToPadding="false" />
+
 </RelativeLayout>

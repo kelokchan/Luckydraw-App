@@ -9,6 +9,7 @@ import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.Menu;
@@ -35,12 +36,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     GridView myGrid;
     int size;
-    Button button1, start;
+    Button button1;
+    FloatingActionButton start;
     ArrayList<String> frontPhotos;
     public static String backPhoto;
     ArrayList<Box> boxList;
     public Adapter_box ab;
-    public static int numberOfCards = 9;
+    public static final int MAXIMUM_CARDS = 15;
     GifImageView gifImageView;
     GifImageView congratsImageView;
 
@@ -49,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public static final int TWELVE = 12;
     public static final int FIFTEEN = 15;
     public static final int COLUMN_SIZE = 3;
+    public static final int COLUMN_SIZE_COMPACT = 4;
     public static int row= 3;
     private DAOdb daOdb;
 
@@ -70,11 +73,25 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         initDB();
 
         if (!boxList.isEmpty()) {
+            if(boxList.size()>12){
+                size = (getScreenWidth() / COLUMN_SIZE_COMPACT) - 50;
+                myGrid.setNumColumns(COLUMN_SIZE_COMPACT);
+            }else{
+                size = (getScreenWidth() / COLUMN_SIZE) - 50;
+                myGrid.setNumColumns(COLUMN_SIZE);
+            }
+            myGrid.setColumnWidth(size);
             ab = new Adapter_box(getApplicationContext(), boxList, true);
             ab.notifyDataSetChanged();
             myGrid.setAdapter(ab);
             backPhoto = boxList.get(0).getBack();
         }
+
+        View positiveButton = findViewById(R.id.gridView);
+        RelativeLayout.LayoutParams layoutParams =
+                (RelativeLayout.LayoutParams)positiveButton.getLayoutParams();
+        layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+        positiveButton.setLayoutParams(layoutParams);
 
         myGrid.setOnItemClickListener(this);
 
@@ -83,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             @Override
             public void onClick(View v) {
                 PhotoPickerIntent intent = new PhotoPickerIntent(MainActivity.this);
-                intent.setPhotoCount(numberOfCards);
+                intent.setPhotoCount(MAXIMUM_CARDS);
                 intent.setShowCamera(true);
                 intent.setShowGif(false);
                 startActivityForResult(intent, 100);
@@ -100,12 +117,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 startActivityForResult(intent, 200);
             }
         });
-        start = (Button) findViewById(R.id.start);
+        start = (FloatingActionButton) findViewById(R.id.start);
 
         start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+                start.setVisibility(View.GONE);
                 gifImageView.setVisibility(View.GONE);
                 congratsImageView.setAnimation(null);
                 congratsImageView.setVisibility(View.GONE);
@@ -126,7 +144,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         start.setVisibility(View.GONE);
                         clickable = true;
                         start.setVisibility(View.VISIBLE);
-                        start.setText("Ready");
                     }
                 }, 2000);
 
@@ -188,7 +205,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     congratsImageView.setAnimation(fadeAnimation);
 
                     start.setVisibility(View.VISIBLE);
-                    start.setText("Replay");
                 }
             }, 1000);
 
@@ -297,7 +313,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_box, menu);
+//        inflater.inflate(R.menu.menu_box, menu);
 
         return true;
     }
@@ -307,7 +323,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         int id = item.getItemId();
 
         if (id == R.id.x9) {
-            numberOfCards = NINE;
             size = (getScreenWidth() / 3) - 50;
             myGrid.setColumnWidth(size);
             myGrid.setNumColumns(3);
@@ -328,7 +343,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
             return true;
         } else if (id == R.id.x12) {
-            numberOfCards = TWELVE;
             size = (getScreenWidth() / 3) - 50;
             myGrid.setColumnWidth(size);
             myGrid.setNumColumns(3);
@@ -342,15 +356,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             ab = new Adapter_box(getApplicationContext(), boxList, true);
             myGrid.setAdapter(ab);
 
-            View positiveButton = findViewById(R.id.gridView);
-            RelativeLayout.LayoutParams layoutParams =
-                    (RelativeLayout.LayoutParams)positiveButton.getLayoutParams();
-            layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
-            positiveButton.setLayoutParams(layoutParams);
-
             return true;
         } else if (id == R.id.x15) {
-            numberOfCards = FIFTEEN;
             size = (getScreenWidth() / 3) - 50;
             myGrid.setColumnWidth(size);
             myGrid.setNumColumns(3);
