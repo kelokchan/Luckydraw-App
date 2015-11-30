@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.squareup.picasso.Picasso;
 
@@ -48,7 +47,6 @@ public class Adapter_box extends BaseAdapter {
     {
         ImageView front;
         ImageView back;
-        LinearLayout lb;
         ViewHolder(View v){
             front = (ImageView) v.findViewById(R.id.front);
             back = (ImageView) v.findViewById(R.id.back);
@@ -73,9 +71,9 @@ public class Adapter_box extends BaseAdapter {
 
         Box temp = box_list.get(position);
 
-        Picasso.with(context).load(new File(temp.front)).resize(75,75).centerCrop().into(holder.front);
+        Picasso.with(context).load(new File(temp.front)).resize(100,100).centerCrop().into(holder.front);
         if(temp.back!=null) {
-            Picasso.with(context).load(new File(temp.back)).resize(75,75).centerCrop().into(holder.back);
+            Picasso.with(context).load(new File(temp.back)).resize(100,100).centerCrop().into(holder.back);
         }
 
 

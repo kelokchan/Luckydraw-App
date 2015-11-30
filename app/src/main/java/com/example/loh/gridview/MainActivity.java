@@ -1,5 +1,6 @@
 package com.example.loh.gridview;
 
+import android.app.Dialog;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
@@ -16,14 +17,19 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.squareup.picasso.Picasso;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -36,25 +42,21 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     GridView myGrid;
     int size;
-    Button button1;
+    Button frontButton, backButton;
     FloatingActionButton start;
     ArrayList<String> frontPhotos;
     public static String backPhoto;
-    ArrayList<Box> boxList;
+    ArrayList<Box> boxList= new ArrayList<>();;
     public Adapter_box ab;
-    public static final int MAXIMUM_CARDS = 15;
+    public static final int MAXIMUM_CARDS = 16;
+    public static boolean expandable = true;
     GifImageView gifImageView;
     GifImageView congratsImageView;
 
     public static boolean clickable = false;
-    public static final int NINE = 9;
-    public static final int TWELVE = 12;
-    public static final int FIFTEEN = 15;
     public static final int COLUMN_SIZE = 3;
     public static final int COLUMN_SIZE_COMPACT = 4;
-    public static int row= 3;
     private DAOdb daOdb;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,24 +64,18 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         setContentView(R.layout.activity_main);
 
         myGrid = (GridView) findViewById(R.id.gridView);
-        size = (getScreenWidth() / COLUMN_SIZE) - 50;
-        myGrid.setColumnWidth(size);
-        myGrid.setNumColumns(COLUMN_SIZE);
-
+        myGrid.setOnItemClickListener(this);
         gifImageView = (GifImageView) findViewById(R.id.gifImageView);
         congratsImageView = (GifImageView) findViewById(R.id.congratsImageView);
-
-        boxList = new ArrayList<>();
         initDB();
 
+        size = getSize(COLUMN_SIZE);
+        myGrid.setColumnWidth(size);
+        myGrid.setNumColumns(COLUMN_SIZE);
+        layoutCenterInParent();
+
         if (!boxList.isEmpty()) {
-            if(boxList.size()>12){
-                size = (getScreenWidth() / COLUMN_SIZE_COMPACT) - 50;
-                myGrid.setNumColumns(COLUMN_SIZE_COMPACT);
-            }else{
-                size = (getScreenWidth() / COLUMN_SIZE) - 50;
-                myGrid.setNumColumns(COLUMN_SIZE);
-            }
+            setBoxSize();
             myGrid.setColumnWidth(size);
             ab = new Adapter_box(getApplicationContext(), boxList, true);
             ab.notifyDataSetChanged();
@@ -87,16 +83,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             backPhoto = boxList.get(0).getBack();
         }
 
-        View positiveButton = findViewById(R.id.gridView);
-        RelativeLayout.LayoutParams layoutParams =
-                (RelativeLayout.LayoutParams)positiveButton.getLayoutParams();
-        layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
-        positiveButton.setLayoutParams(layoutParams);
-
-        myGrid.setOnItemClickListener(this);
-
-        button1 = (Button) findViewById(R.id.button1);
-        button1.setOnClickListener(new View.OnClickListener() {
+        frontButton = (Button) findViewById(R.id.button1);
+        frontButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 PhotoPickerIntent intent = new PhotoPickerIntent(MainActivity.this);
@@ -107,7 +95,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         });
 
-        findViewById(R.id.button2).setOnClickListener(new View.OnClickListener() {
+        backButton = (Button) findViewById(R.id.button2);
+        backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 PhotoPickerIntent intent = new PhotoPickerIntent(MainActivity.this);
@@ -117,12 +106,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 startActivityForResult(intent, 200);
             }
         });
-        start = (FloatingActionButton) findViewById(R.id.start);
 
+        start = (FloatingActionButton) findViewById(R.id.start);
         start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+                expandable = false;
                 start.setVisibility(View.GONE);
                 gifImageView.setVisibility(View.GONE);
                 congratsImageView.setAnimation(null);
@@ -143,6 +133,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         myGrid.setAdapter(new Adapter_box(getApplicationContext(), boxList, false));
                         start.setVisibility(View.GONE);
                         clickable = true;
+                        start.setImageResource(R.drawable.ic_replay_white_24dp);
                         start.setVisibility(View.VISIBLE);
                     }
                 }, 2000);
@@ -152,42 +143,24 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
 
     }
-
-    private void initDB() {
-        daOdb = new DAOdb(this);
-        //        add images from database to images ArrayList
-        for (Box mi : daOdb.getBoxImages()) {
-            boxList.add(mi);
-        }
-    }
-
-    public int getScreenWidth() {
-        DisplayMetrics displaymetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-        return displaymetrics.widthPixels;
-    }
-
-
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
 
-        if (clickable == true) {
+        if (clickable) {
             Adapter_box.ViewHolder holder = (Adapter_box.ViewHolder) view.getTag();
             flip(holder.back, holder.front, 1000);
             move(holder.front);
+            zoom(holder.front);
             clickable = false;
-
-
+            expandable = true;
             final Handler handler = new Handler();
 
             handler.postDelayed(new Runnable() {
 
                 @Override
                 public void run() {
-
                     final MediaPlayer c = MediaPlayer.create(getApplicationContext(), R.raw.congrats);
                     c.start();
-
                     for (int x = 0; x < myGrid.getChildCount(); x++) {
                         Adapter_box.ViewHolder holders = (Adapter_box.ViewHolder) myGrid.getChildAt(x).getTag();
                         if (holders.back.getVisibility() == View.VISIBLE) {
@@ -203,14 +176,49 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
                     Animation fadeAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade);
                     congratsImageView.setAnimation(fadeAnimation);
-
                     start.setVisibility(View.VISIBLE);
                 }
             }, 1000);
+        }else if (expandable){
+            final Dialog dialog = new Dialog(MainActivity.this);
+            // Include dialog.xml file
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.activity_dialog);
+            ImageView image = (ImageView) dialog.findViewById(R.id.goProDialogImage);
+            Picasso.with(dialog.getContext()).load(new File(boxList.get(position).front)).resize(1000,1000).centerCrop()
+                    .into(image);
+            dialog.show();
+            // if decline button is clicked, close the custom dialog
 
         }
     }
 
+    //TODO set the entire GridView layout to the center of screen
+    public void layoutCenterInParent(){
+        View view = findViewById(R.id.gridView);
+        RelativeLayout.LayoutParams layoutParams =
+                (RelativeLayout.LayoutParams)view.getLayoutParams();
+        layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+        view.setLayoutParams(layoutParams);
+
+    }
+
+    private void initDB() {
+        daOdb = new DAOdb(this);
+        //        add images from database to images ArrayList
+        for (Box mi : daOdb.getBoxImages()) {
+            boxList.add(mi);
+        }
+    }
+
+    //TODO get the width of the screen in order to decide the width of column
+    public int getSize(int column) {
+        DisplayMetrics displaymetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+        return (displaymetrics.widthPixels/column)-50;
+    }
+
+    //TODO Animation- flip the selected card
     public void flip(final View front, final View back, final int duration) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
 
@@ -237,6 +245,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     }
 
+    //TODO Animation-shuffle card to the center of screen
     private void moveViewToScreenCenter(View view) {
         RelativeLayout root = (RelativeLayout) findViewById(R.id.gridView_layout);
         DisplayMetrics dm = new DisplayMetrics();
@@ -258,6 +267,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         view.startAnimation(anim);
     }
 
+    //TODO Animation-move the selected card
     public void move(View front) {
         TranslateAnimation animation = new TranslateAnimation(0, 0, 0, 25);
         animation.setDuration(100);
@@ -266,6 +276,32 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         animation.setRepeatMode(Animation.REVERSE);
         animation.setFillAfter(true);
         front.startAnimation(animation);
+    }
+
+    //TODO Animation-zoom in the selected card
+    public void zoom(View front){
+        front.bringToFront();
+        ObjectAnimator scaleDownX = ObjectAnimator.ofFloat(front, "scaleX", 1.5f);
+        ObjectAnimator scaleDownY = ObjectAnimator.ofFloat(front, "scaleY", 1.5f);
+
+        scaleDownX.setDuration(1000);
+        scaleDownY.setDuration(1000);
+
+        AnimatorSet scaleDown = new AnimatorSet();
+        scaleDown.play(scaleDownX).with(scaleDownY);
+        scaleDown.start();
+    }
+
+    public void setBoxSize(){
+        if(boxList.size()>12){
+            size = getSize(COLUMN_SIZE_COMPACT);
+            myGrid.setColumnWidth(size);
+            myGrid.setNumColumns(COLUMN_SIZE_COMPACT);
+        }else{
+            size = getSize(COLUMN_SIZE);
+            myGrid.setColumnWidth(size);
+            myGrid.setNumColumns(COLUMN_SIZE);
+        }
     }
 
     @Override
@@ -286,10 +322,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     boxList.add(box);
                     daOdb.addBoxImage(box);
                 }
-
-                ab = new Adapter_box(getApplicationContext(), boxList, true);
-                ab.notifyDataSetChanged();
-                myGrid.setAdapter(ab);
             }
         }
 
@@ -303,17 +335,22 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         box.setBack(backPhoto);
                     }
                     daOdb.addBoxBack(backPhoto);
-                    ab = new Adapter_box(getApplicationContext(), boxList, true);
-                    ab.notifyDataSetChanged();
-                    myGrid.setAdapter(ab);
                 }
             }
         }
+
+        setBoxSize();
+        clickable = false;
+        ab = new Adapter_box(getApplicationContext(), boxList, true);
+        ab.notifyDataSetChanged();
+        myGrid.setAdapter(ab);
+        start.setBackgroundResource(R.drawable.ic_play_arrow_white_24dp);
+        layoutCenterInParent();
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-//        inflater.inflate(R.menu.menu_box, menu);
+        inflater.inflate(R.menu.menu_box, menu);
 
         return true;
     }
@@ -322,55 +359,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         int id = item.getItemId();
 
-        if (id == R.id.x9) {
-            size = (getScreenWidth() / 3) - 50;
-            myGrid.setColumnWidth(size);
-            myGrid.setNumColumns(3);
-            int deleteCount = boxList.size() - NINE;
-            for (int i = 0; i < deleteCount; i++) {
-                Box box = boxList.get(i);
-                daOdb.deleteBoxImage(box);
-                boxList.remove(i);
-            }
-            ab = new Adapter_box(getApplicationContext(), boxList, true);
-            myGrid.setAdapter(ab);
-
-            View positiveButton = findViewById(R.id.gridView);
-            RelativeLayout.LayoutParams layoutParams =
-                    (RelativeLayout.LayoutParams)positiveButton.getLayoutParams();
-            layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
-            positiveButton.setLayoutParams(layoutParams);
-
+        if(id == R.id.normalMode){
+            frontButton.setVisibility(View.GONE);
+            backButton.setVisibility(View.GONE);
+            start.setVisibility(View.VISIBLE);
             return true;
-        } else if (id == R.id.x12) {
-            size = (getScreenWidth() / 3) - 50;
-            myGrid.setColumnWidth(size);
-            myGrid.setNumColumns(3);
-            int deleteCount = boxList.size() - TWELVE;
-            for (int i = 0; i < deleteCount; i++) {
-                Box box = boxList.get(i);
-                daOdb.deleteBoxImage(box);
-                boxList.remove(i);
-            }
-            row = 4;
-            ab = new Adapter_box(getApplicationContext(), boxList, true);
-            myGrid.setAdapter(ab);
-
-            return true;
-        } else if (id == R.id.x15) {
-            size = (getScreenWidth() / 3) - 50;
-            myGrid.setColumnWidth(size);
-            myGrid.setNumColumns(3);
-            row = 5;
-            ab = new Adapter_box(getApplicationContext(), boxList, true);
-            myGrid.setAdapter(ab);
-
-            View positiveButton = findViewById(R.id.gridView);
-            RelativeLayout.LayoutParams layoutParams =
-                    (RelativeLayout.LayoutParams)positiveButton.getLayoutParams();
-            layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
-            positiveButton.setLayoutParams(layoutParams);
-
+        }else if(id == R.id.editMode){
+            frontButton.setVisibility(View.VISIBLE);
+            backButton.setVisibility(View.VISIBLE);
+            start.setVisibility(View.GONE);
             return true;
         }
         return super.onOptionsItemSelected(item);

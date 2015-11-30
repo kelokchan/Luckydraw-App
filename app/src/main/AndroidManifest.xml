@@ -19,7 +19,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".Dialog"
-            android:theme="@android:style/Theme.Dialog"></activity>
+            android:theme="@style/myDialog"></activity>
         <activity android:name="me.iwf.photopicker.PhotoPickerActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar"
             />
