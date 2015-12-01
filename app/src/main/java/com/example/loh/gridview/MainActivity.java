@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public Adapter_box ab;
     public static final int MAXIMUM_CARDS = 16;
     public static boolean expandable = true;
+    public static boolean firstTime = true;
     GifImageView gifImageView;
     GifImageView congratsImageView;
 
@@ -111,33 +112,41 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 expandable = false;
                 start.setVisibility(View.GONE);
                 gifImageView.setVisibility(View.GONE);
                 congratsImageView.setAnimation(null);
                 congratsImageView.setVisibility(View.GONE);
 
-                for (int x = 0; x < myGrid.getChildCount(); x++) {
-                    Adapter_box.ViewHolder holder = (Adapter_box.ViewHolder) myGrid.getChildAt(x).getTag();
-                    flip(holder.front, holder.back, 1000);
-                    moveViewToScreenCenter(holder.back);
-                }
-
-                final Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        long seed = System.nanoTime();
-                        Collections.shuffle(boxList, new Random(seed));
-                        myGrid.setAdapter(new Adapter_box(getApplicationContext(), boxList, false));
-                        start.setVisibility(View.GONE);
-                        clickable = true;
-                        start.setImageResource(R.drawable.ic_replay_white_24dp);
-                        start.setVisibility(View.VISIBLE);
+                if (firstTime) {
+                    for (int x = 0; x < myGrid.getChildCount(); x++) {
+                        Adapter_box.ViewHolder holder = (Adapter_box.ViewHolder) myGrid.getChildAt(x).getTag();
+                        flip(holder.front, holder.back, 1000);
+                        moveViewToScreenCenter(holder.back);
                     }
-                }, 2000);
 
+                    final Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            long seed = System.nanoTime();
+                            Collections.shuffle(boxList, new Random(seed));
+                            myGrid.setAdapter(new Adapter_box(getApplicationContext(), boxList, false));
+                            start.setVisibility(View.GONE);
+                            clickable = true;
+                            start.setImageResource(R.drawable.ic_replay_white_24dp);
+                            firstTime = false;
+                        }
+                    }, 2000);
+
+                }
+                else{
+                    expandable = true;
+                    start.setImageResource(R.drawable.ic_play_arrow_white_24dp);
+                    start.setVisibility(View.VISIBLE);
+                    myGrid.setAdapter(new Adapter_box(getApplicationContext(), boxList, true));
+                    firstTime = true;
+                }
             }
         });
 
@@ -185,7 +194,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog.setContentView(R.layout.activity_dialog);
             ImageView image = (ImageView) dialog.findViewById(R.id.goProDialogImage);
-            Picasso.with(dialog.getContext()).load(new File(boxList.get(position).front)).resize(1000,1000).centerCrop()
+            Picasso.with(dialog.getContext()).load(new File(boxList.get(position).front)).resize(800,800).centerCrop()
                     .into(image);
             dialog.show();
             // if decline button is clicked, close the custom dialog
@@ -281,8 +290,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     //TODO Animation-zoom in the selected card
     public void zoom(View front){
         front.bringToFront();
-        ObjectAnimator scaleDownX = ObjectAnimator.ofFloat(front, "scaleX", 1.5f);
-        ObjectAnimator scaleDownY = ObjectAnimator.ofFloat(front, "scaleY", 1.5f);
+        ObjectAnimator scaleDownX = ObjectAnimator.ofFloat(front, "scaleX", 1.15f);
+        ObjectAnimator scaleDownY = ObjectAnimator.ofFloat(front, "scaleY", 1.15f);
 
         scaleDownX.setDuration(1000);
         scaleDownY.setDuration(1000);
