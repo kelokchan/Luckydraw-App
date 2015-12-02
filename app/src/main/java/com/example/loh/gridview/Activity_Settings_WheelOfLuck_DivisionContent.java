@@ -35,6 +35,7 @@ public class Activity_Settings_WheelOfLuck_DivisionContent extends AppCompatActi
         al = new Adapter_ListView(this, numberOfDivision,photos);
         listView.setAdapter(al);
 
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 

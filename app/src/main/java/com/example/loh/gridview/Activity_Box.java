@@ -33,6 +33,7 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -94,15 +95,6 @@ public class Activity_Box extends AppCompatActivity implements AdapterView.OnIte
         myGrid.setNumColumns(COLUMN_SIZE);
         layoutCenterInParent();
 
-        if (!boxList.isEmpty()) {
-            setBoxSize();
-            myGrid.setColumnWidth(size);
-            ab = new Adapter_box(getApplicationContext(), boxList, true);
-            ab.notifyDataSetChanged();
-            myGrid.setAdapter(ab);
-            backPhoto = boxList.get(0).getBack();
-        }
-
         frontButton = (Button) findViewById(R.id.button1);
         frontButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,6 +120,7 @@ public class Activity_Box extends AppCompatActivity implements AdapterView.OnIte
         });
 
         start = (FloatingActionButton) findViewById(R.id.start);
+
         start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -169,6 +162,19 @@ public class Activity_Box extends AppCompatActivity implements AdapterView.OnIte
             }
         });
 
+        if (!boxList.isEmpty()) {
+            setBoxSize();
+            myGrid.setColumnWidth(size);
+            ab = new Adapter_box(getApplicationContext(), boxList, true);
+            ab.notifyDataSetChanged();
+            myGrid.setAdapter(ab);
+            backPhoto = boxList.get(0).getBack();
+        }else{
+            Toast.makeText(Activity_Box.this, "Previous settings not found", Toast.LENGTH_SHORT).show();
+            frontButton.setVisibility(View.VISIBLE);
+            backButton.setVisibility(View.VISIBLE);
+            start.setVisibility(View.GONE);
+        }
 
     }
     @Override

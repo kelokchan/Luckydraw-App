@@ -3,6 +3,7 @@ package com.example.loh.gridview;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 
 import com.victor.ringbutton.RingButton;
 
@@ -30,10 +31,11 @@ public class Activity_Selection extends AppCompatActivity {
 
             @Override
             public void clickDown() {
-                DAOdb daOdb = new DAOdb(Activity_Selection.this);
                 try {
+                    DAOdb daOdb = new DAOdb(Activity_Selection.this);
                     List<DivisionItem> divisionItemList = daOdb.getDivisionItems();
                     if (divisionItemList.size() < 1) {
+                        Toast.makeText(Activity_Selection.this, "Previous settings not found", Toast.LENGTH_SHORT).show();
                         PhotoPickerIntent intent = new PhotoPickerIntent(Activity_Selection.this);
                         intent.setPhotoCount(16);
                         intent.setShowCamera(true);
