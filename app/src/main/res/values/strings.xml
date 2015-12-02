@@ -3,4 +3,13 @@
     <string name="action_about">more</string>
     <string name="normal_mode">Normal Mode</string>
     <string name="edit_mode">Edit Mode</string>
+    <string name="wheelOfLuck">Wheel Of Luck</string>
+    <string name="title_activity_activity__settings__wheel_of_luck__division_content">
+        Edit items
+    </string>
+    <string name="title_activity_activity__settings__wheel_of_luck__number_of_division">
+        Activity_Settings_WheelOfLuck_NumberOfDivision
+    </string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
 </resources>

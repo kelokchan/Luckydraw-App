@@ -29,10 +29,16 @@ dependencies {
     compile 'net.soulwolf.image:pictureChoose:1.0.0'
     compile 'me.iwf.photopicker:PhotoPicker:0.2.8@aar'
     compile 'com.android.support:appcompat-v7:23.1.1'
+
     compile 'com.android.support:recyclerview-v7:23.1.1'
     compile 'com.android.support:design:23.1.1'
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'com.github.bumptech.glide:glide:3.6.0'
-    compile 'pl.droidsonroids.gif:android-gif-drawable:1.1.+'
 
+    compile 'pl.droidsonroids.gif:android-gif-drawable:1.1.+'
+    compile 'com.victor.ringbutton:lib:1.0.1'
+    compile 'com.jakewharton:butterknife:7.0.1'
+    compile 'com.github.bmarrdev:android-DecoView-charting:v0.9.4'
+    compile 'com.larswerkman:lobsterpicker:1.0.0'
+    compile 'com.github.QuadFlask:colorpicker:v0.0.9'
 }

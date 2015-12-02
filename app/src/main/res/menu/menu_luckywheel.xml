@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/edit_luckywheel"
+        android:showAsAction="never"
+        android:title="Edit Lucky Wheel" />
+
+    <item
+        android:id="@+id/edit_background"
+        android:showAsAction="never"
+        android:title="Edit background" />
+
+    <item
+        android:id="@+id/clear_background"
+        android:showAsAction="never"
+        android:title="Clear background"/>
+</menu>

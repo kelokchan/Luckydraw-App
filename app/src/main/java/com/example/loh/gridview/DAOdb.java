@@ -47,6 +47,17 @@ public class DAOdb {
         return database.update(DBhelper.TABLE_NAME, cv, null, null);
     }
 
+    public void addDivisionItems(List<DivisionItem> divisionItemList){
+        for(DivisionItem item : divisionItemList) {
+            ContentValues cv = new ContentValues();
+            cv.put(DBhelper.COLUMN_COLOR, item.getColor());
+            cv.put(DBhelper.COLUMN_TITLE, item.getTitle());
+            cv.put(DBhelper.COLUMN_PHOTO, item.getPicturePath());
+            database.insert(DBhelper.TABLE_NAME_2, null, cv);
+        }
+    }
+
+
     /**
      * delete the given image from database
      *
@@ -64,6 +75,10 @@ public class DAOdb {
     public void deleteAllBoxes(){
         database.delete(DBhelper.TABLE_NAME,null,null);
     }
+
+    public void deleteAllDivisionItems(){ database.delete(DBhelper.TABLE_NAME_2,null,null);}
+
+
 
     /**
      * @return all image as a List
@@ -83,6 +98,21 @@ public class DAOdb {
         return MyImages;
     }
 
+    public List<DivisionItem> getDivisionItems(){
+        List<DivisionItem> divisionItemList = new ArrayList<>();
+        Cursor cursor =
+                database.query(DBhelper.TABLE_NAME_2, null, null, null, null,
+                        null, null + " DESC");
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            DivisionItem MyImage = cursorToDivisionItem(cursor);
+            divisionItemList.add(MyImage);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return divisionItemList;
+    }
+
     /**
      * read the cursor row and convert the row to a MyImage object
      *
@@ -96,5 +126,13 @@ public class DAOdb {
         image.setBack(
                 cursor.getString(cursor.getColumnIndex(DBhelper.COLUMN_BACK)));
         return image;
+    }
+
+    private DivisionItem cursorToDivisionItem(Cursor cursor){
+        DivisionItem divisionItem = new DivisionItem();
+        divisionItem.setColor(cursor.getInt(cursor.getColumnIndex(DBhelper.COLUMN_COLOR)));
+        divisionItem.setTitle(cursor.getString(cursor.getColumnIndex(DBhelper.COLUMN_TITLE)));
+        divisionItem.setPicturePath(cursor.getString(cursor.getColumnIndexOrThrow(DBhelper.COLUMN_PHOTO)));
+        return divisionItem;
     }
 }

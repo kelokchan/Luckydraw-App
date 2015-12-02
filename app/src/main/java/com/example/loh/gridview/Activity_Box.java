@@ -1,15 +1,22 @@
 package com.example.loh.gridview;
 
-import android.app.Dialog;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
@@ -38,9 +45,10 @@ import me.iwf.photopicker.PhotoPickerActivity;
 import me.iwf.photopicker.utils.PhotoPickerIntent;
 import pl.droidsonroids.gif.GifImageView;
 
-public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+public class Activity_Box extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
     GridView myGrid;
+    RelativeLayout gridviewLayout;
     int size;
     Button frontButton, backButton;
     FloatingActionButton start;
@@ -58,11 +66,22 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public static final int COLUMN_SIZE = 3;
     public static final int COLUMN_SIZE_COMPACT = 4;
     private DAOdb daOdb;
+    private SharedPreferences sharedPreferences;
+    private static final String PREFERENCE_NAME = "SETTINGS";
+    private static final String BACKGROUND_KEY ="BOX_BACKGROUND";
+    private String backgroundPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_box);
+
+        gridviewLayout = (RelativeLayout) findViewById(R.id.gridView_layout);
+        sharedPreferences = getSharedPreferences(PREFERENCE_NAME, 0);
+        backgroundPath = sharedPreferences.getString(BACKGROUND_KEY, null);
+        BitmapDrawable background = new BitmapDrawable(BitmapFactory.decodeFile(backgroundPath));
+        gridviewLayout.setBackgroundDrawable(background);
+
 
         myGrid = (GridView) findViewById(R.id.gridView);
         myGrid.setOnItemClickListener(this);
@@ -88,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         frontButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PhotoPickerIntent intent = new PhotoPickerIntent(MainActivity.this);
+                PhotoPickerIntent intent = new PhotoPickerIntent(Activity_Box.this);
                 intent.setPhotoCount(MAXIMUM_CARDS);
                 intent.setShowCamera(true);
                 intent.setShowGif(false);
@@ -100,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PhotoPickerIntent intent = new PhotoPickerIntent(MainActivity.this);
+                PhotoPickerIntent intent = new PhotoPickerIntent(Activity_Box.this);
                 intent.setPhotoCount(1);
                 intent.setShowCamera(true);
                 intent.setShowGif(false);
@@ -189,7 +208,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 }
             }, 1000);
         }else if (expandable){
-            final Dialog dialog = new Dialog(MainActivity.this);
+            final Dialog dialog = new Dialog(Activity_Box.this);
             // Include dialog.xml file
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog.setContentView(R.layout.activity_dialog);
@@ -348,6 +367,23 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         }
 
+        if (requestCode == 300 && resultCode == Activity.RESULT_OK && null != data) {
+            Uri selectedImage = data.getData();
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
+            Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+            cursor.moveToFirst();
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            String picturePath = cursor.getString(columnIndex);
+
+            sharedPreferences = getSharedPreferences(PREFERENCE_NAME, 0);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString(BACKGROUND_KEY, picturePath);
+            editor.apply();
+            BitmapDrawable background = new BitmapDrawable(BitmapFactory.decodeFile(picturePath));
+            gridviewLayout.setBackgroundDrawable(background);
+            cursor.close();
+        }
+
         setBoxSize();
         clickable = false;
         ab = new Adapter_box(getApplicationContext(), boxList, true);
@@ -355,6 +391,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         myGrid.setAdapter(ab);
         start.setBackgroundResource(R.drawable.ic_play_arrow_white_24dp);
         layoutCenterInParent();
+
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -378,6 +415,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             backButton.setVisibility(View.VISIBLE);
             start.setVisibility(View.GONE);
             return true;
+        }else if(id == R.id.edit_background){
+            Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            startActivityForResult(i, 300);
+        }else if(id == R.id.clear_background){
+            gridviewLayout.setBackgroundDrawable(null);
+            sharedPreferences = getSharedPreferences(PREFERENCE_NAME, 0);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString(BACKGROUND_KEY, "");
+            editor.apply();
         }
         return super.onOptionsItemSelected(item);
     }

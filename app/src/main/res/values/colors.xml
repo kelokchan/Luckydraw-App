@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#167F39</color>
-    <color name="colorPrimaryDark">#044C29</color>
-    <color name="colorAccent">#17dd4c</color>
+    <color name="colorPrimary">#2196F3</color>
+    <color name="colorPrimaryDark">#1976D2</color>
+    <color name="colorAccent">#FFC107</color>
     <color name="transparent">#00000000</color>
     <!-- card_bg colors -->
     <color name="card_background">#ffffff</color>
