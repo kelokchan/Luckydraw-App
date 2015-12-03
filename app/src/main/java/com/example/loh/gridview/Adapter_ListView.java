@@ -84,7 +84,7 @@ public class Adapter_ListView extends BaseAdapter{
 
         holder.title.setText(title.get(position));
         holder.color.setBackgroundColor(color.get(position));
-        Picasso.with(context).load(new File(photos.get(position))).into(holder.image);
+        Picasso.with(context).load(new File(photos.get(position))).resize(100,100).centerInside().into(holder.image);
         holder.image.setTag(photos.get(position));
         holder.color.setOnClickListener(new View.OnClickListener() {
             @Override

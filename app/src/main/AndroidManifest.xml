@@ -29,7 +29,8 @@
         <activity
             android:name=".Activity_Settings_WheelOfLuck_DivisionContent"
             android:label="@string/title_activity_activity__settings__wheel_of_luck__division_content"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan"/>
         <activity android:name=".Activity_Selection">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

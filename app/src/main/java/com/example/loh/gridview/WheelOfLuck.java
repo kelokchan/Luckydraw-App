@@ -48,7 +48,7 @@ public class WheelOfLuck extends View {
 
     @Override
     protected void onDraw(Canvas mCanvas) {
-        Log.e("onDraw",itemCount+"");
+        Log.e("onDraw", itemCount + "");
         int screenWidth=getMeasuredWidth();
         int screenHeight=getMeasuredHeight();
         int width = Math.min(screenWidth, screenHeight);
@@ -73,6 +73,7 @@ public class WheelOfLuck extends View {
     }
 
     private void drawIcon(float tmpAngle, Bitmap bitmap, Canvas mCanvas) {
+        bitmap = Bitmap.createScaledBitmap(bitmap, 100,100,false);
         int imgWidth = radius / 4;
         double angle = ((tmpAngle + 360 / itemCount / 2) * Math.PI / 180);
         int x = (int) (centerX + radius / 2 * Math.cos(angle));
@@ -99,6 +100,7 @@ public class WheelOfLuck extends View {
             mColors[i]=divisionItems.get(i).getColor();
             mTitle[i]=divisionItems.get(i).getTitle();
             mImgsBitmaps[i]=BitmapFactory.decodeFile(divisionItems.get(i).getPicturePath());
+            mImgsBitmaps[i] = Bitmap.createScaledBitmap(mImgsBitmaps[i],100,100,false);
         }
     }
 }

@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -183,8 +182,8 @@ public class Activity_LuckyWheel extends AppCompatActivity {
                 case MotionEvent.ACTION_UP: {
                     long difference_Time = System.nanoTime() - startTime;
                     double ratio_Time = difference_Time / 5e+9;
-                    Log.e("abs", 10 * ratio_Time + "");
-                    spin(currAngle, 12828 * ratio_Time, (long) (ratio_Time * 5000), true);
+                    if(ratio_Time>0.1)spin(currAngle, currAngle+10828 * ratio_Time, (long) (ratio_Time * 8000), true);
+                    else spin(currAngle, currAngle+10828 * ratio_Time, (long) (ratio_Time * 10000), true);
                     chargingProgressView.deleteAll();
                     chargingProgressView.setVisibility(View.INVISIBLE);
                     break;
