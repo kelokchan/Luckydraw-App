@@ -1,7 +1,5 @@
 package com.example.loh.gridview;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -44,33 +42,19 @@ public class Activity_Settings_WheelOfLuck_DivisionContent extends AppCompatActi
             @Override
             public void onClick(View view) {
                 List<DivisionItem> divisionItems = al.getDivisionItems();
-                boolean editTextNotEmpty = false;
-                for(DivisionItem divisionItem:divisionItems){
-                    if(divisionItem.getTitle().isEmpty()){
-                        new AlertDialog.Builder(Activity_Settings_WheelOfLuck_DivisionContent.this)
-                                .setTitle("Error")
-                                .setMessage("Empty title")
-                                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialoginterface, int i) {
-                                        dialoginterface.dismiss();
-                                    }
-                                })
-                                .create().show();
-                        break;
-                    }else{
-                        editTextNotEmpty=true;
+                for (DivisionItem divisionItem : divisionItems) {
+                    if (divisionItem.getTitle().isEmpty()) {
+                        divisionItem.setTitle("");
                     }
                 }
 
-                if(editTextNotEmpty){
-                    Intent intent = new Intent(Activity_Settings_WheelOfLuck_DivisionContent.this, Activity_LuckyWheel.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("value", (Serializable) (al.getDivisionItems()));
-                    DAOdb daOdb = new DAOdb(getApplicationContext());
-                    daOdb.addDivisionItems(al.getDivisionItems());
-                    intent.putExtras(bundle);
-                    startActivity(intent);
-                }
+                Intent intent = new Intent(Activity_Settings_WheelOfLuck_DivisionContent.this, Activity_LuckyWheel.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("value", (Serializable) (al.getDivisionItems()));
+                DAOdb daOdb = new DAOdb(getApplicationContext());
+                daOdb.addDivisionItems(al.getDivisionItems());
+                intent.putExtras(bundle);
+                startActivity(intent);
             }
         });
     }
