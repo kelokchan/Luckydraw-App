@@ -71,9 +71,9 @@ public class Adapter_box extends BaseAdapter {
 
         Box temp = box_list.get(position);
 
-        Picasso.with(context).load(new File(temp.front)).resize(350,350).centerCrop().into(holder.front);
+        Picasso.with(context).load(new File(temp.front)).resize(300,300).centerCrop().into(holder.front);
         if(temp.back!=null) {
-            Picasso.with(context).load(new File(temp.back)).resize(350,350).centerCrop().into(holder.back);
+            Picasso.with(context).load(new File(temp.back)).resize(300,300).centerCrop().into(holder.back);
         }
 
 
