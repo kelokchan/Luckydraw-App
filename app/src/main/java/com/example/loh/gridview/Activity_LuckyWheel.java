@@ -16,6 +16,7 @@ import android.os.Handler;
 import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -142,7 +143,11 @@ public class Activity_LuckyWheel extends AppCompatActivity {
                         long durationMillis = (long) (initialVelocity / angularAcceleration);
                         double mStopAngle = initialVelocity * durationMillis + angularAcceleration * Math.pow(durationMillis, 2) / 2;
                         if (mPrevAngle > mCurrAngle) mStopAngle = -mStopAngle;
-                        spin(mCurrAngle, mStopAngle / 10, durationMillis * 8, true);
+                        double angleDiff=Math.abs(mStopAngle / 10-mCurrAngle);
+                        if(angleDiff>3000)spin(mCurrAngle, mStopAngle / 10, durationMillis * 32, true);
+                        else if(angleDiff>2500)spin(mCurrAngle, mStopAngle / 10, durationMillis * 28, true);
+                        else if(angleDiff>2000)spin(mCurrAngle, mStopAngle / 10, durationMillis * 18, true);
+                        else spin(mCurrAngle, mStopAngle / 10, durationMillis * 8, true);
                         mPrevAngle = mCurrAngle = 0;
                     }
                     break;
@@ -196,6 +201,8 @@ public class Activity_LuckyWheel extends AppCompatActivity {
 
     // Rotation animation of lucky wheel
     private void spin(double fromDegrees, double toDegrees, long durationMillis, boolean isSpinning) {
+        Log.e("degreediff",(toDegrees-fromDegrees)+"");
+        Log.e("duration",durationMillis+"");
         final RotateAnimation rotate = new RotateAnimation((float) fromDegrees, (float) toDegrees,
                 RotateAnimation.RELATIVE_TO_SELF, 0.5f,
                 RotateAnimation.RELATIVE_TO_SELF, 0.5f);

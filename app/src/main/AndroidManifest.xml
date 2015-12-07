@@ -33,7 +33,9 @@
             android:theme="@style/Theme.AppCompat.NoActionBar"
             android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden"/>
-        <activity android:name=".Activity_LuckyWheel" />
+        <activity
+            android:name=".Activity_LuckyWheel"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".Activity_Settings_WheelOfLuck_DivisionContent"
             android:label="@string/title_activity_activity__settings__wheel_of_luck__division_content"
