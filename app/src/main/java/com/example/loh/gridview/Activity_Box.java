@@ -87,7 +87,6 @@ public class Activity_Box extends AppCompatActivity implements AdapterView.OnIte
         BitmapDrawable background = new BitmapDrawable(BitmapFactory.decodeFile(backgroundPath));
         gridviewLayout.setBackgroundDrawable(background);
 
-
         myGrid = (GridView) findViewById(R.id.gridView);
         myGrid.setOnItemClickListener(this);
         gifImageView = (GifImageView) findViewById(R.id.gifImageView);
@@ -208,10 +207,8 @@ public class Activity_Box extends AppCompatActivity implements AdapterView.OnIte
 
                     gifImageView.setVisibility(View.VISIBLE);
                     congratsImageView.setVisibility(View.VISIBLE);
-
                     gifImageView.bringToFront();
                     congratsImageView.bringToFront();
-
                     Animation fadeAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade);
                     congratsImageView.setAnimation(fadeAnimation);
                     start.setVisibility(View.VISIBLE);
@@ -391,6 +388,7 @@ public class Activity_Box extends AppCompatActivity implements AdapterView.OnIte
                 editor.putString(BACKGROUND_KEY, picturePath);
                 editor.apply();
                 BitmapDrawable background = new BitmapDrawable(BitmapFactory.decodeFile(picturePath));
+                gridviewLayout.setBackgroundDrawable(null);
                 gridviewLayout.setBackgroundDrawable(background);
                 cursor.close();
 
@@ -398,7 +396,8 @@ public class Activity_Box extends AppCompatActivity implements AdapterView.OnIte
                 try {
                     Bitmap selected_image = getBitmapFromUri(selectedImage);
                     BitmapDrawable ob = new BitmapDrawable(getResources(), selected_image);
-                    gridviewLayout.setBackground(ob);
+                    gridviewLayout.setBackgroundDrawable(null);
+                    gridviewLayout.setBackgroundDrawable(ob);
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }

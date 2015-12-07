@@ -70,7 +70,6 @@ public class Activity_LuckyWheel extends AppCompatActivity {
     private static String backgroundPath;
     private static final String PREFERENCE_NAME = "SETTINGS";
     private static final String BACKGROUND_KEY = "WHEEL_BACKGROUND";
-    MediaPlayer musicPlayer;
 
     @Bind(R.id.gifImageView)
     GifImageView gifImageView;
@@ -100,8 +99,6 @@ public class Activity_LuckyWheel extends AppCompatActivity {
         backgroundPath = sharedPreferences.getString(BACKGROUND_KEY, null);
         BitmapDrawable background = new BitmapDrawable(BitmapFactory.decodeFile(backgroundPath));
         rl.setBackgroundDrawable(background);
-
-        musicPlayer = MediaPlayer.create(this, R.raw.congrats);
     }
 
     @OnClick(R.id.spinner)
@@ -222,7 +219,6 @@ public class Activity_LuckyWheel extends AppCompatActivity {
                 public void onAnimationEnd(Animation arg0) {
                     spinner.setOnTouchListener(spinnerOnTouchListener);
                     wheelOfLuck.setOnTouchListener(wheelOnTouchListener);
-
                     showEffect();
                 }
             });
@@ -237,13 +233,20 @@ public class Activity_LuckyWheel extends AppCompatActivity {
 
             @Override
             public void run() {
-                gifImageView.setVisibility(View.VISIBLE);
-                congratsImageView.setVisibility(View.VISIBLE);
-                gifImageView.bringToFront();
-                congratsImageView.bringToFront();
-                Animation fadeAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade);
-                congratsImageView.setAnimation(fadeAnimation);
-                musicPlayer.start();
+                try {
+                    MediaPlayer musicPlayer = MediaPlayer.create(getApplicationContext(), R.raw.congrats);
+                    gifImageView.setVisibility(View.VISIBLE);
+                    congratsImageView.setVisibility(View.VISIBLE);
+                    gifImageView.bringToFront();
+                    congratsImageView.bringToFront();
+                    musicPlayer.start();
+                    Animation fadeAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade);
+                    congratsImageView.setAnimation(fadeAnimation);
+                    musicPlayer = null;
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }, 500);
     }
@@ -252,9 +255,6 @@ public class Activity_LuckyWheel extends AppCompatActivity {
         congratsImageView.setAnimation(null);
         gifImageView.setVisibility(View.GONE);
         congratsImageView.setVisibility(View.GONE);
-        if (musicPlayer.isPlaying()) {
-            musicPlayer.stop();
-        }
     }
 
     // Inflate overflow menu
@@ -311,13 +311,15 @@ public class Activity_LuckyWheel extends AppCompatActivity {
                 editor.putString(BACKGROUND_KEY, picturePath);
                 editor.apply();
                 BitmapDrawable background = new BitmapDrawable(BitmapFactory.decodeFile(picturePath));
+                rl.setBackgroundDrawable(null);
                 rl.setBackgroundDrawable(background);
                 cursor.close();
             }catch (Exception e){
                 try {
                     Bitmap selected_image = getBitmapFromUri(selectedImage);
                     BitmapDrawable ob = new BitmapDrawable(getResources(), selected_image);
-                    rl.setBackground(ob);
+                    rl.setBackgroundDrawable(null);
+                    rl.setBackgroundDrawable(ob);
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
@@ -349,5 +351,10 @@ public class Activity_LuckyWheel extends AppCompatActivity {
         Intent intent = new Intent(Activity_LuckyWheel.this,Activity_Selection.class);
         startActivity(intent);
         finish();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
     }
 }
