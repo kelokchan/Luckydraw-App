@@ -188,6 +188,8 @@ public class Activity_Box extends AppCompatActivity implements AdapterView.OnIte
             flip(holder.back, holder.front, 1000);
             move(holder.front);
             zoom(holder.front);
+            holder.front.setBackgroundResource(R.drawable.border_win);
+
             clickable = false;
             expandable = true;
             final Handler handler = new Handler();
@@ -306,8 +308,7 @@ public class Activity_Box extends AppCompatActivity implements AdapterView.OnIte
     public void move(View front) {
         TranslateAnimation animation = new TranslateAnimation(0, 0, 0, 25);
         animation.setDuration(100);
-        animation.setFillAfter(true);
-        animation.setRepeatCount(-1);
+        animation.setRepeatCount(12);
         animation.setRepeatMode(Animation.REVERSE);
         animation.setFillAfter(true);
         front.startAnimation(animation);
