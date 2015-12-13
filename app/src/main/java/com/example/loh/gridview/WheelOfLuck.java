@@ -9,7 +9,6 @@ import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 
@@ -53,7 +52,7 @@ public class WheelOfLuck extends View {
         int screenWidth=getMeasuredWidth();
         int screenHeight=getMeasuredHeight();
         int width = Math.min(screenWidth, screenHeight);
-        radius=width/2;
+        radius=width/2-80;
         centerX=getMeasuredHeight()>getMeasuredWidth()?screenWidth/2:screenHeight/2;
         centerY=getMeasuredHeight()>getMeasuredWidth()?screenHeight/2:screenWidth/2;
 
@@ -110,7 +109,6 @@ public class WheelOfLuck extends View {
         path.moveTo(x, y);
         path.lineTo(centerX, centerY);
         mCanvas.drawTextOnPath(mStr, path, 0, 20, mTextPaint);
-        Log.e(x+" "+(centerX+ radius / 4),y+" "+(centerY+ radius / 4));
 
         //Text out circle in code
         /*Path path = new Path();

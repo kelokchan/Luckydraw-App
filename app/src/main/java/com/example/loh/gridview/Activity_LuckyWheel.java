@@ -16,19 +16,20 @@ import android.os.Handler;
 import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.hookedonplay.decoviewlib.DecoView;
@@ -56,6 +57,8 @@ public class Activity_LuckyWheel extends AppCompatActivity {
     WheelOfLuck wheelOfLuck;
     @Bind(R.id.spinner)
     ImageButton spinner;
+    @Bind(R.id.imgview_wheel_bg)
+    ImageView wheel_bg;
     private double mCurrAngle = 0;
     private double mPrevAngle = 0;
     private double angularAcceleration;
@@ -102,6 +105,13 @@ public class Activity_LuckyWheel extends AppCompatActivity {
         backgroundPath = sharedPreferences.getString(BACKGROUND_KEY, null);
         BitmapDrawable background = new BitmapDrawable(BitmapFactory.decodeFile(backgroundPath));
         rl.setBackgroundDrawable(background);
+
+        final Animation animation = new AlphaAnimation(1, 0);
+        animation.setDuration(500);
+        animation.setInterpolator(new LinearInterpolator());
+        animation.setRepeatCount(Animation.INFINITE);
+        animation.setRepeatMode(Animation.REVERSE);
+        wheel_bg.startAnimation(animation);
     }
 
     @OnClick(R.id.spinner)
@@ -203,8 +213,7 @@ public class Activity_LuckyWheel extends AppCompatActivity {
 
     // Rotation animation of lucky wheel
     private void spin(double fromDegrees, double toDegrees, long durationMillis, boolean isSpinning) {
-        Log.e("degreediff",(toDegrees-fromDegrees)+"");
-        Log.e("duration",durationMillis+"");
+        if(durationMillis>8000)durationMillis=8000;
         final RotateAnimation rotate = new RotateAnimation((float) fromDegrees, (float) toDegrees,
                 RotateAnimation.RELATIVE_TO_SELF, 0.5f,
                 RotateAnimation.RELATIVE_TO_SELF, 0.5f);
