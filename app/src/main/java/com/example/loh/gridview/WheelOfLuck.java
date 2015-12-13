@@ -16,10 +16,13 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 /**
  * Created by User on 11/19/2015.
  */
 public class WheelOfLuck extends View {
+    private Context context;
     private int radius;
     private int centerX, centerY;
     private Paint mTextPaint, mArcPaint;
@@ -42,13 +45,11 @@ public class WheelOfLuck extends View {
         mTextPaint = new Paint();
         mTextPaint.setColor(0xffffffff);
         mTextPaint.setTextSize(mTextSize);
-        Log.e("constructor", itemCount + "");
         draw(mCanvas);
     }
 
     @Override
     protected void onDraw(Canvas mCanvas) {
-        Log.e("onDraw", itemCount + "");
         int screenWidth=getMeasuredWidth();
         int screenHeight=getMeasuredHeight();
         int width = Math.min(screenWidth, screenHeight);
@@ -59,15 +60,15 @@ public class WheelOfLuck extends View {
         rect = new RectF();
         rect.set(getWidth() / 2 - radius, getHeight() / 2 - radius, getWidth() / 2 + radius, getHeight() / 2 + radius);
         float tmpAngle = 0;
-        float sweepAngle = 360 / itemCount;
+        float sweepAngle = (float)360 / itemCount;
         for (int i = 0; i < itemCount; i++) {
             mArcPaint.setColor(mColors[i]);
             mArcPaint.setAntiAlias(true);
             mArcPaint.setDither(true);
             mArcPaint.setStrokeCap(Paint.Cap.BUTT);
             mCanvas.drawArc(rect, tmpAngle, sweepAngle, true, mArcPaint);
-            drawTextOnPath(tmpAngle, sweepAngle, mTitle[i],mCanvas);
-            drawIcon(tmpAngle, mImgsBitmaps[i],mCanvas);
+            drawTextOnPath(tmpAngle, sweepAngle, mTitle[i], mCanvas);
+            drawIcon(tmpAngle, mImgsBitmaps[i], mCanvas);
             tmpAngle += sweepAngle;
         }
     }
@@ -76,19 +77,48 @@ public class WheelOfLuck extends View {
         bitmap = Bitmap.createScaledBitmap(bitmap, 100,100,false);
         int imgWidth = radius / 4;
         double angle = ((tmpAngle + 360 / itemCount / 2) * Math.PI / 180);
-        int x = (int) (centerX + radius / 2 * Math.cos(angle));
-        int y = (int) (centerY + radius / 2 * Math.sin(angle));
-        Rect rect = new Rect(x - imgWidth / 2, y - imgWidth / 2, x + imgWidth / 2, y + imgWidth / 2);
-        mCanvas.drawBitmap(bitmap, null, rect, null);
+        int x = (int) (centerX + radius *5/6 * Math.cos(angle));
+        int y = (int) (centerY + radius *5/6 * Math.sin(angle));
+
+        if(context!=null){
+            CircleImageView circleImageView = new CircleImageView(context);
+            circleImageView.setImageBitmap(bitmap);
+            //Set position of circle view
+            circleImageView.setLeft(x - imgWidth / 2);
+            circleImageView.setTop(y - imgWidth / 2);
+            circleImageView.setRight(x + imgWidth / 2);
+            circleImageView.setBottom(y + imgWidth / 2);
+
+            circleImageView.setDrawingCacheEnabled(true);
+            circleImageView.buildDrawingCache();
+            //Size of circle to draw
+            Rect rect = new Rect(x - imgWidth / 2, y - imgWidth / 2, x + imgWidth / 2, y + imgWidth / 2);
+            mCanvas.drawBitmap(circleImageView.getDrawingCache(), null, rect, null);
+        }
+
+        //Text out circle in code
+        //Rect rect = new Rect(x - imgWidth / 2, y - imgWidth / 2, x + imgWidth / 2, y + imgWidth / 2);
+        //mCanvas.drawBitmap(bitmap, null, rect, null);
     }
 
     private void drawTextOnPath(float tmpAngle, float sweepAngle, String mStr, Canvas mCanvas) {
+        float angle = (float)((tmpAngle + 360 / itemCount / 2) * Math.PI / 180);
+        float x = (float) (centerX + radius *2/3 * Math.cos(angle));
+        float y = (float) (centerY + radius *2/3 * Math.sin(angle));
+
         Path path = new Path();
+        path.moveTo(x, y);
+        path.lineTo(centerX, centerY);
+        mCanvas.drawTextOnPath(mStr, path, 0, 20, mTextPaint);
+        Log.e(x+" "+(centerX+ radius / 4),y+" "+(centerY+ radius / 4));
+
+        //Text out circle in code
+        /*Path path = new Path();
         path.addArc(rect, tmpAngle, sweepAngle);
         float textLength = mTextPaint.measureText(mStr);
         float hOffset = (float) ((radius*2 * Math.PI / itemCount - textLength) / 2);
         float vOffset = radius / 6;
-        mCanvas.drawTextOnPath(mStr, path, hOffset, vOffset, mTextPaint);
+        mCanvas.drawTextOnPath(mStr, path, hOffset, vOffset, mTextPaint);*/
     }
 
     public void setDivisionItems(List<DivisionItem> divisionItems){
@@ -102,5 +132,9 @@ public class WheelOfLuck extends View {
             mImgsBitmaps[i]=BitmapFactory.decodeFile(divisionItems.get(i).getPicturePath());
             mImgsBitmaps[i] = Bitmap.createScaledBitmap(mImgsBitmaps[i],100,100,false);
         }
+    }
+
+    public void setContext(Context context){
+        this.context = context;
     }
 }

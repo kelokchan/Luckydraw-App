@@ -86,11 +86,13 @@ public class Activity_LuckyWheel extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lucky_wheel);
         ButterKnife.bind(this);
+        wheelOfLuck.setContext(Activity_LuckyWheel.this);
 
         daOdb = new DAOdb(this);
         divisionItemList = daOdb.getDivisionItems();
         Bundle bundle = getIntent().getExtras();
 /*        divisionItemList = (ArrayList<DivisionItem>)bundle.getSerializable("value");*/
+
         wheelOfLuck.setDivisionItems(divisionItemList);
 
         spinner.setOnTouchListener(spinnerOnTouchListener);
