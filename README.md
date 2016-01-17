@@ -1,6 +1,6 @@
 # Luckydraw-App
 A highly customizable lucky draw app featuring pictures, animation and music.
-![Alt text](https://github.com/kelokchan/Luckydraw-App/blob/master/Screenshots/1.jpg?raw=true "Home Screen")
+![Alt text](https://github.com/kelokchan/Luckydraw-App/blob/master/Screenshots/1.jpg?raw=true "Home Screen"=50x100)
 
 ## Box Lucky Draw
 Able to create up to 4x4 lucky draw box, maximum 16 images. Customizable cover photo and screen background. Flip card by tapping.
