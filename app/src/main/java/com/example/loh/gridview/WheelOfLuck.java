@@ -73,7 +73,10 @@ public class WheelOfLuck extends View {
     }
 
     private void drawIcon(float tmpAngle, Bitmap bitmap, Canvas mCanvas) {
-        bitmap = Bitmap.createScaledBitmap(bitmap, 100,100,false);
+        Bitmap scaledBitmap = null;
+        if(bitmap != null) {
+            scaledBitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, false);
+        }
         int imgWidth = radius / 4;
         double angle = ((tmpAngle + 360 / itemCount / 2) * Math.PI / 180);
         int x = (int) (centerX + radius *5/6 * Math.cos(angle));
@@ -81,7 +84,7 @@ public class WheelOfLuck extends View {
 
         if(context!=null){
             CircleImageView circleImageView = new CircleImageView(context);
-            circleImageView.setImageBitmap(bitmap);
+            circleImageView.setImageBitmap(scaledBitmap);
             //Set position of circle view
             circleImageView.setLeft(x - imgWidth / 2);
             circleImageView.setTop(y - imgWidth / 2);
@@ -127,8 +130,9 @@ public class WheelOfLuck extends View {
         for(int i=0; i<itemCount;i++){
             mColors[i]=divisionItems.get(i).getColor();
             mTitle[i]=divisionItems.get(i).getTitle();
-            mImgsBitmaps[i]=BitmapFactory.decodeFile(divisionItems.get(i).getPicturePath());
-            mImgsBitmaps[i] = Bitmap.createScaledBitmap(mImgsBitmaps[i],100,100,false);
+            Bitmap bitmap = BitmapFactory.decodeFile(divisionItems.get(i).getPicturePath());
+            if (bitmap != null)
+                mImgsBitmaps[i]=Bitmap.createScaledBitmap(bitmap, 100, 100, false);
         }
     }
 
