@@ -53,8 +53,8 @@ public class WheelOfLuck extends View {
         int screenHeight=getMeasuredHeight();
         int width = Math.min(screenWidth, screenHeight);
         radius=width/2-80;
-        centerX=getMeasuredHeight()>getMeasuredWidth()?screenWidth/2:screenHeight/2;
-        centerY=getMeasuredHeight()>getMeasuredWidth()?screenHeight/2:screenWidth/2;
+        centerX=screenWidth/2;
+        centerY=screenHeight/2;
 
         rect = new RectF();
         rect.set(getWidth() / 2 - radius, getHeight() / 2 - radius, getWidth() / 2 + radius, getHeight() / 2 + radius);

@@ -94,10 +94,11 @@ public class Activity_LuckyWheel extends AppCompatActivity {
         ButterKnife.bind(this);
         wheelOfLuck.setContext(Activity_LuckyWheel.this);
 
+
         daOdb = new DAOdb(this);
         divisionItemList = daOdb.getDivisionItems();
         Bundle bundle = getIntent().getExtras();
-/*        divisionItemList = (ArrayList<DivisionItem>)bundle.getSerializable("value");*/
+        //divisionItemList = (ArrayList<DivisionItem>)bundle.getSerializable("value");
 
         wheelOfLuck.setDivisionItems(divisionItemList);
 
