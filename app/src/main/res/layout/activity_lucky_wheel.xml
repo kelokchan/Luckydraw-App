@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:id="@+id/relativeLayout"
     android:animateLayoutChanges="true"
-    android:onClick="hideToolbar"
     tools:context="com.now.luckydrawapp.Activity_LuckyWheel">
 
     <ImageView
