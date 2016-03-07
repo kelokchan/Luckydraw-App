@@ -21,6 +21,7 @@ public class Activity_Selection extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selection);
 
+        getSupportActionBar().hide();
         RingButton ringButton = (RingButton) findViewById(R.id.ringButton);
         ringButton.setOnClickListener(new RingButton.OnClickListener() {
             @Override

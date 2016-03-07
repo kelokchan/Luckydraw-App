@@ -64,6 +64,7 @@ public class Activity_Box extends AppCompatActivity implements AdapterView.OnIte
     public static final int MAXIMUM_CARDS = 16;
     public static boolean expandable = true;
     public static boolean firstTime = true;
+    public static boolean toolbarHidden = true;
     GifImageView gifImageView;
     GifImageView congratsImageView;
 
@@ -80,6 +81,7 @@ public class Activity_Box extends AppCompatActivity implements AdapterView.OnIte
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_box);
+        getSupportActionBar().hide();
 
         gridviewLayout = (RelativeLayout) findViewById(R.id.gridView_layout);
         sharedPreferences = getSharedPreferences(PREFERENCE_NAME, 0);
@@ -227,6 +229,17 @@ public class Activity_Box extends AppCompatActivity implements AdapterView.OnIte
             dialog.show();
             // if decline button is clicked, close the custom dialog
 
+        }
+    }
+
+    //hide the bloody toolbar
+    public void hideToolbar(View view){
+        if(toolbarHidden){
+            getSupportActionBar().show();
+            toolbarHidden = false;
+        }else {
+            getSupportActionBar().hide();
+            toolbarHidden = true;
         }
     }
 

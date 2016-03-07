@@ -64,6 +64,7 @@ public class Activity_LuckyWheel extends AppCompatActivity {
     private double angularAcceleration;
     private long initTime;
     private long diffTime;
+    public static boolean toolbarHidden = true;
     private VelocityTracker tracker = VelocityTracker.obtain();
     // Charging View attributes
     @Bind(R.id.dynamicArcView)
@@ -88,6 +89,8 @@ public class Activity_LuckyWheel extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lucky_wheel);
+        getSupportActionBar().hide();
+
         ButterKnife.bind(this);
         wheelOfLuck.setContext(Activity_LuckyWheel.this);
 
@@ -274,6 +277,18 @@ public class Activity_LuckyWheel extends AppCompatActivity {
         gifImageView.setVisibility(View.GONE);
         congratsImageView.setVisibility(View.GONE);
     }
+
+    //hide the bloody toolbar
+    public void hideToolbar(View view){
+        if(toolbarHidden){
+            getSupportActionBar().show();
+            toolbarHidden = false;
+        }else {
+            getSupportActionBar().hide();
+            toolbarHidden = true;
+        }
+    }
+
 
     // Inflate overflow menu
     @Override

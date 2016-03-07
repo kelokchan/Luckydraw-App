@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     tools:context=".Activity_Box"
     android:id="@+id/gridView_layout"
+    android:onClick="hideToolbar"
     android:clipChildren="false"
     android:padding="5dp"
     android:animateLayoutChanges="true">
