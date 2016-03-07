@@ -11,7 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:src="@drawable/wheel_background_lights_out"/>
+        android:src="@drawable/wheel_background_lights_out"
+        android:id="@+id/imageView" />
 
     <ImageView
         android:id="@+id/imgview_wheel_bg"
@@ -41,10 +42,12 @@
 
     <com.example.loh.gridview.WheelOfLuck
         android:id="@+id/wheelOfLuck"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:padding="50dp"
-        android:layout_centerInParent="true"/>
+        android:layout_centerHorizontal="true"
+        android:layout_alignBottom="@+id/imageView"
+        android:layout_alignTop="@+id/imageView" />
 
     <com.hookedonplay.decoviewlib.DecoView
         android:id="@+id/dynamicArcView"
