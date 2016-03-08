@@ -224,7 +224,10 @@ public class Activity_Box extends AppCompatActivity implements AdapterView.OnIte
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog.setContentView(R.layout.activity_dialog);
             ImageView image = (ImageView) dialog.findViewById(R.id.goProDialogImage);
-            Picasso.with(dialog.getContext()).load(new File(boxList.get(position).front)).resize(800,800).centerCrop()
+            Picasso.with(dialog.getContext()).
+                    load(new File(boxList.get(position).front))
+                    .resize(1000,1000)
+                    .centerCrop()
                     .into(image);
             dialog.show();
             // if decline button is clicked, close the custom dialog
@@ -320,8 +323,8 @@ public class Activity_Box extends AppCompatActivity implements AdapterView.OnIte
     //TODO Animation-move the selected card
     public void move(View front) {
         TranslateAnimation animation = new TranslateAnimation(0, 0, 0, 25);
-        animation.setDuration(100);
-        animation.setRepeatCount(12);
+        animation.setDuration(200);
+        animation.setRepeatCount(Animation.INFINITE);
         animation.setRepeatMode(Animation.REVERSE);
         animation.setFillAfter(true);
         front.startAnimation(animation);
@@ -332,10 +335,8 @@ public class Activity_Box extends AppCompatActivity implements AdapterView.OnIte
         front.bringToFront();
         ObjectAnimator scaleDownX = ObjectAnimator.ofFloat(front, "scaleX", 1.15f);
         ObjectAnimator scaleDownY = ObjectAnimator.ofFloat(front, "scaleY", 1.15f);
-
         scaleDownX.setDuration(1000);
         scaleDownY.setDuration(1000);
-
         AnimatorSet scaleDown = new AnimatorSet();
         scaleDown.play(scaleDownX).with(scaleDownY);
         scaleDown.start();

@@ -115,7 +115,7 @@ public class Activity_LuckyWheel extends AppCompatActivity {
         BitmapDrawable background = new BitmapDrawable(BitmapFactory.decodeFile(backgroundPath));
         rl.setBackgroundDrawable(background);
 
-        blinkingAnimation(wheel_bg,500);
+        blinkingAnimation(wheel_bg, 500);
     }
 
     private float sectorStartAngle;
@@ -261,8 +261,8 @@ public class Activity_LuckyWheel extends AppCompatActivity {
             public void run() {
                 try {
                     // Add winning sector indicator
-                    sector = new WheelOfLuck_WinningSector(getApplicationContext(), null,sectorStartAngle, sweepAngle);
-                    RelativeLayout rl = (RelativeLayout)findViewById(R.id.relativeLayout);
+                    sector = new WheelOfLuck_WinningSector(getApplicationContext(), null, sectorStartAngle, sweepAngle);
+                    RelativeLayout rl = (RelativeLayout) findViewById(R.id.relativeLayout);
                     rl.addView(sector);
                     blinkingAnimation(sector, 100);
 
@@ -278,7 +278,7 @@ public class Activity_LuckyWheel extends AppCompatActivity {
 
                     tempSpinner = new ImageButton(getApplicationContext());
                     RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, getResources().getDisplayMetrics())
-                            , (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, getResources().getDisplayMetrics()));
+                            , (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, getResources().getDisplayMetrics()));
                     lp.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
                     tempSpinner.setLayoutParams(lp);
                     tempSpinner.setBackgroundResource(R.mipmap.spinner);
@@ -293,8 +293,7 @@ public class Activity_LuckyWheel extends AppCompatActivity {
                     Animation fadeAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade);
                     congratsImageView.setAnimation(fadeAnimation);
                     musicPlayer = null;
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -302,10 +301,15 @@ public class Activity_LuckyWheel extends AppCompatActivity {
     }
 
     public void hideEffects() {
-        if(sector!=null) ((ViewManager)sector.getParent()).removeView(sector);
-        if(tempSpinner!=null) ((ViewManager)tempSpinner.getParent()).removeView(tempSpinner);
-        if(tempPointer!=null) ((ViewManager)tempPointer.getParent()).removeView(tempPointer);
-
+        try {
+            if (sector != null) ((ViewManager) sector.getParent()).removeView(sector);
+            if (tempSpinner != null)
+                ((ViewManager) tempSpinner.getParent()).removeView(tempSpinner);
+            if (tempPointer != null)
+                ((ViewManager) tempPointer.getParent()).removeView(tempPointer);
+        }catch (Exception ex){
+            //i duno lol
+        }
         congratsImageView.setAnimation(null);
         gifImageView.setVisibility(View.GONE);
         congratsImageView.setVisibility(View.GONE);
