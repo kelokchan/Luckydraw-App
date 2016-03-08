@@ -130,7 +130,11 @@ public class WheelOfLuck extends View {
         for(int i=0; i<itemCount;i++){
             mColors[i]=divisionItems.get(i).getColor();
             mTitle[i]=divisionItems.get(i).getTitle();
-            Bitmap bitmap = BitmapFactory.decodeFile(divisionItems.get(i).getPicturePath());
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = false;
+            options.inPreferredConfig = Bitmap.Config.RGB_565;
+            options.inDither = true;
+            Bitmap bitmap = BitmapFactory.decodeFile(divisionItems.get(i).getPicturePath(),options);
             if (bitmap != null)
                 mImgsBitmaps[i]=Bitmap.createScaledBitmap(bitmap, 100, 100, false);
         }
