@@ -16,12 +16,15 @@ import android.os.Handler;
 import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -43,7 +46,6 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import me.iwf.photopicker.PhotoPickerActivity;
 import me.iwf.photopicker.utils.PhotoPickerIntent;
 import pl.droidsonroids.gif.GifImageView;
@@ -84,6 +86,9 @@ public class Activity_LuckyWheel extends AppCompatActivity {
     SharedPreferences sharedPreferences;
     private DAOdb daOdb;
     List<DivisionItem> divisionItemList;
+    private WheelOfLuck_WinningSector sector;
+    private ImageButton tempSpinner;
+    private ImageView tempPointer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,19 +115,11 @@ public class Activity_LuckyWheel extends AppCompatActivity {
         BitmapDrawable background = new BitmapDrawable(BitmapFactory.decodeFile(backgroundPath));
         rl.setBackgroundDrawable(background);
 
-        final Animation animation = new AlphaAnimation(1, 0);
-        animation.setDuration(500);
-        animation.setInterpolator(new LinearInterpolator());
-        animation.setRepeatCount(Animation.INFINITE);
-        animation.setRepeatMode(Animation.REVERSE);
-        wheel_bg.startAnimation(animation);
+        blinkingAnimation(wheel_bg,500);
     }
 
-    @OnClick(R.id.spinner)
-    public void spinnerOnClick() {
-        //spin(currAngle, 12828, 3000, true);
-    }
-
+    private float sectorStartAngle;
+    private float sweepAngle;
     // Lucky Wheel onTouch
     View.OnTouchListener wheelOnTouchListener = new View.OnTouchListener() {
         @Override
@@ -158,12 +155,19 @@ public class Activity_LuckyWheel extends AppCompatActivity {
                     if (initialVelocity > 5) {
                         long durationMillis = (long) (initialVelocity / angularAcceleration);
                         double mStopAngle = initialVelocity * durationMillis + angularAcceleration * Math.pow(durationMillis, 2) / 2;
-                        if (mPrevAngle > mCurrAngle) mStopAngle = -mStopAngle;
+                        sweepAngle =360/divisionItemList.size();
+                        if (mPrevAngle > mCurrAngle){
+                            mStopAngle = -mStopAngle;
+                            sectorStartAngle = (float)(((mStopAngle/10)%360)%sweepAngle-sweepAngle+315);
+                        }else{
+                            sectorStartAngle = (float)(((mStopAngle/10)%360)%sweepAngle-sweepAngle+270);
+                        }
                         double angleDiff=Math.abs(mStopAngle / 10-mCurrAngle);
                         if(angleDiff>3000)spin(mCurrAngle, mStopAngle / 10, durationMillis * 32, true);
                         else if(angleDiff>2500)spin(mCurrAngle, mStopAngle / 10, durationMillis * 28, true);
                         else if(angleDiff>2000)spin(mCurrAngle, mStopAngle / 10, durationMillis * 18, true);
                         else spin(mCurrAngle, mStopAngle / 10, durationMillis * 8, true);
+
                         mPrevAngle = mCurrAngle = 0;
                     }
                     break;
@@ -256,6 +260,30 @@ public class Activity_LuckyWheel extends AppCompatActivity {
             @Override
             public void run() {
                 try {
+                    // Add winning sector indicator
+                    sector = new WheelOfLuck_WinningSector(getApplicationContext(), null,sectorStartAngle, sweepAngle);
+                    RelativeLayout rl = (RelativeLayout)findViewById(R.id.relativeLayout);
+                    rl.addView(sector);
+                    blinkingAnimation(sector, 100);
+
+                    tempPointer = new ImageView(getApplicationContext());
+                    RelativeLayout.LayoutParams lp1 = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT
+                            , ViewGroup.LayoutParams.WRAP_CONTENT);
+                    lp1.setMargins(0, 0, 0, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 67, getResources().getDisplayMetrics()));
+                    lp1.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE);
+                    lp1.addRule(RelativeLayout.ALIGN_BOTTOM, R.id.spinner);
+                    tempPointer.setLayoutParams(lp1);
+                    tempPointer.setImageResource(R.mipmap.pointer);
+                    rl.addView(tempPointer);
+
+                    tempSpinner = new ImageButton(getApplicationContext());
+                    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, getResources().getDisplayMetrics())
+                            , (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, getResources().getDisplayMetrics()));
+                    lp.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+                    tempSpinner.setLayoutParams(lp);
+                    tempSpinner.setBackgroundResource(R.mipmap.spinner);
+                    rl.addView(tempSpinner);
+
                     MediaPlayer musicPlayer = MediaPlayer.create(getApplicationContext(), R.raw.congrats);
                     gifImageView.setVisibility(View.VISIBLE);
                     congratsImageView.setVisibility(View.VISIBLE);
@@ -274,6 +302,10 @@ public class Activity_LuckyWheel extends AppCompatActivity {
     }
 
     public void hideEffects() {
+        if(sector!=null) ((ViewManager)sector.getParent()).removeView(sector);
+        if(tempSpinner!=null) ((ViewManager)tempSpinner.getParent()).removeView(tempSpinner);
+        if(tempPointer!=null) ((ViewManager)tempPointer.getParent()).removeView(tempPointer);
+
         congratsImageView.setAnimation(null);
         gifImageView.setVisibility(View.GONE);
         congratsImageView.setVisibility(View.GONE);
@@ -290,6 +322,14 @@ public class Activity_LuckyWheel extends AppCompatActivity {
         }
     }
 
+    public void blinkingAnimation(View view, int duration){
+        final Animation animation = new AlphaAnimation(1, 0);
+        animation.setDuration(duration);
+        animation.setInterpolator(new LinearInterpolator());
+        animation.setRepeatCount(Animation.INFINITE);
+        animation.setRepeatMode(Animation.REVERSE);
+        view.startAnimation(animation);
+    }
 
     // Inflate overflow menu
     @Override
