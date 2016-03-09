@@ -16,6 +16,7 @@ import android.os.Handler;
 import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -158,16 +159,20 @@ public class Activity_LuckyWheel extends AppCompatActivity {
                         sweepAngle =360/divisionItemList.size();
                         if (mPrevAngle > mCurrAngle){
                             mStopAngle = -mStopAngle;
-                            sectorStartAngle = (float)(((mStopAngle/10)%360)%sweepAngle-sweepAngle+315);
+                            sectorStartAngle = (float)(((mStopAngle/10)%360));
+                            Log.e("da",sectorStartAngle+"");
+                            while((sectorStartAngle-sweepAngle)<-90)sectorStartAngle+=sweepAngle;
+                            sectorStartAngle-=2*sweepAngle;
                         }else{
-                            sectorStartAngle = (float)(((mStopAngle/10)%360)%sweepAngle-sweepAngle+270);
+                            sectorStartAngle = (float)(((Math.abs(mStopAngle)/10)%360));
+                            while(sectorStartAngle>-90)sectorStartAngle-=sweepAngle;
                         }
+                        Log.e(mStopAngle/10+"", sectorStartAngle + "");
                         double angleDiff=Math.abs(mStopAngle / 10-mCurrAngle);
                         if(angleDiff>3000)spin(mCurrAngle, mStopAngle / 10, durationMillis * 32, true);
                         else if(angleDiff>2500)spin(mCurrAngle, mStopAngle / 10, durationMillis * 28, true);
                         else if(angleDiff>2000)spin(mCurrAngle, mStopAngle / 10, durationMillis * 18, true);
                         else spin(mCurrAngle, mStopAngle / 10, durationMillis * 8, true);
-
                         mPrevAngle = mCurrAngle = 0;
                     }
                     break;
@@ -283,6 +288,7 @@ public class Activity_LuckyWheel extends AppCompatActivity {
                     tempSpinner.setLayoutParams(lp);
                     tempSpinner.setBackgroundResource(R.mipmap.spinner);
                     rl.addView(tempSpinner);
+                    tempSpinner.setOnTouchListener(spinnerOnTouchListener);
 
                     MediaPlayer musicPlayer = MediaPlayer.create(getApplicationContext(), R.raw.congrats);
                     gifImageView.setVisibility(View.VISIBLE);
@@ -301,15 +307,12 @@ public class Activity_LuckyWheel extends AppCompatActivity {
     }
 
     public void hideEffects() {
-        try {
-            if (sector != null) ((ViewManager) sector.getParent()).removeView(sector);
-            if (tempSpinner != null)
-                ((ViewManager) tempSpinner.getParent()).removeView(tempSpinner);
-            if (tempPointer != null)
-                ((ViewManager) tempPointer.getParent()).removeView(tempPointer);
-        }catch (Exception ex){
-            //i duno lol
-        }
+        try{
+            if(sector!=null) ((ViewManager)sector.getParent()).removeView(sector);
+            if(tempSpinner!=null) ((ViewManager)tempSpinner.getParent()).removeView(tempSpinner);
+            if(tempPointer!=null) ((ViewManager)tempPointer.getParent()).removeView(tempPointer);
+        }catch(Exception e){}
+
         congratsImageView.setAnimation(null);
         gifImageView.setVisibility(View.GONE);
         congratsImageView.setVisibility(View.GONE);
