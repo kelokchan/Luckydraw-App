@@ -105,7 +105,7 @@ public class Activity_LuckyWheel extends AppCompatActivity {
         divisionItemList = daOdb.getDivisionItems();
         Bundle bundle = getIntent().getExtras();
         //divisionItemList = (ArrayList<DivisionItem>)bundle.getSerializable("value");
-
+        currAngle=0;sweepAngle=(float)360 / divisionItemList.size();
         wheelOfLuck.setDivisionItems(divisionItemList);
 
         spinner.setOnTouchListener(spinnerOnTouchListener);
@@ -156,22 +156,26 @@ public class Activity_LuckyWheel extends AppCompatActivity {
                     if (initialVelocity > 5) {
                         long durationMillis = (long) (initialVelocity / angularAcceleration);
                         double mStopAngle = initialVelocity * durationMillis + angularAcceleration * Math.pow(durationMillis, 2) / 2;
-                        sweepAngle =360/divisionItemList.size();
-                        if (mPrevAngle > mCurrAngle){
+                        if (mPrevAngle > mCurrAngle) {
                             mStopAngle = -mStopAngle;
-                            sectorStartAngle = (float)(((mStopAngle/10)%360));
-                            Log.e("da",sectorStartAngle+"");
-                            while((sectorStartAngle-sweepAngle)<-90)sectorStartAngle+=sweepAngle;
-                            sectorStartAngle-=2*sweepAngle;
-                        }else{
-                            sectorStartAngle = (float)(((Math.abs(mStopAngle)/10)%360));
-                            while(sectorStartAngle>-90)sectorStartAngle-=sweepAngle;
+                            sectorStartAngle = (float) (((mStopAngle / 10) % 360));
+                            Log.e("da", sectorStartAngle + "");
+                            while ((sectorStartAngle - sweepAngle) < -90)
+                                sectorStartAngle += sweepAngle;
+                            sectorStartAngle -= 2 * sweepAngle;
+                        } else {
+                            sectorStartAngle = (float) (((Math.abs(mStopAngle) / 10) % 360));
+                            while (sectorStartAngle > -90) {
+                                sectorStartAngle -= sweepAngle;
+                            }
                         }
-                        Log.e(mStopAngle/10+"", sectorStartAngle + "");
-                        double angleDiff=Math.abs(mStopAngle / 10-mCurrAngle);
-                        if(angleDiff>3000)spin(mCurrAngle, mStopAngle / 10, durationMillis * 32, true);
-                        else if(angleDiff>2500)spin(mCurrAngle, mStopAngle / 10, durationMillis * 28, true);
-                        else if(angleDiff>2000)spin(mCurrAngle, mStopAngle / 10, durationMillis * 18, true);
+                        double angleDiff = Math.abs(mStopAngle / 10 - mCurrAngle);
+                        if (angleDiff > 3000)
+                            spin(mCurrAngle, mStopAngle / 10, durationMillis * 32, true);
+                        else if (angleDiff > 2500)
+                            spin(mCurrAngle, mStopAngle / 10, durationMillis * 28, true);
+                        else if (angleDiff > 2000)
+                            spin(mCurrAngle, mStopAngle / 10, durationMillis * 18, true);
                         else spin(mCurrAngle, mStopAngle / 10, durationMillis * 8, true);
                         mPrevAngle = mCurrAngle = 0;
                     }
@@ -188,7 +192,6 @@ public class Activity_LuckyWheel extends AppCompatActivity {
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-
             hideEffects();
 
             switch (event.getAction()) {
@@ -213,8 +216,14 @@ public class Activity_LuckyWheel extends AppCompatActivity {
                 case MotionEvent.ACTION_UP: {
                     long difference_Time = System.nanoTime() - startTime;
                     double ratio_Time = difference_Time / 5e+9;
-                    if(ratio_Time>0.1)spin(currAngle, currAngle+10828 * ratio_Time, (long) (ratio_Time * 8000), true);
-                    else spin(currAngle, currAngle+10828 * ratio_Time, (long) (ratio_Time * 10000), true);
+
+                    double mStopAngle = currAngle + 10828 * ratio_Time;
+                    sectorStartAngle = (float) (((mStopAngle) % 360));
+                    while (sectorStartAngle > -90) sectorStartAngle -= sweepAngle;
+                    if (ratio_Time > 0.1)
+                        spin(currAngle, mStopAngle, (long) (ratio_Time * 8000), true);
+                    else
+                        spin(currAngle, currAngle + 10828 * ratio_Time, (long) (ratio_Time * 10000), true);
                     chargingProgressView.deleteAll();
                     chargingProgressView.setVisibility(View.INVISIBLE);
                     break;
@@ -226,7 +235,7 @@ public class Activity_LuckyWheel extends AppCompatActivity {
 
     // Rotation animation of lucky wheel
     private void spin(double fromDegrees, double toDegrees, long durationMillis, boolean isSpinning) {
-        if(durationMillis>8000)durationMillis=8000;
+        if (durationMillis > 8000) durationMillis = 8000;
         final RotateAnimation rotate = new RotateAnimation((float) fromDegrees, (float) toDegrees,
                 RotateAnimation.RELATIVE_TO_SELF, 0.5f,
                 RotateAnimation.RELATIVE_TO_SELF, 0.5f);
@@ -307,11 +316,12 @@ public class Activity_LuckyWheel extends AppCompatActivity {
     }
 
     public void hideEffects() {
-        try{
-            if(sector!=null) ((ViewManager)sector.getParent()).removeView(sector);
-            if(tempSpinner!=null) ((ViewManager)tempSpinner.getParent()).removeView(tempSpinner);
-            if(tempPointer!=null) ((ViewManager)tempPointer.getParent()).removeView(tempPointer);
-        }catch(Exception e){}
+        try {
+            if (sector != null) ((ViewManager) sector.getParent()).removeView(sector);
+            if (tempSpinner != null) ((ViewManager) tempSpinner.getParent()).removeView(tempSpinner);
+            if (tempPointer != null) ((ViewManager) tempPointer.getParent()).removeView(tempPointer);
+        } catch (Exception e) {
+        }
 
         congratsImageView.setAnimation(null);
         gifImageView.setVisibility(View.GONE);
@@ -319,17 +329,17 @@ public class Activity_LuckyWheel extends AppCompatActivity {
     }
 
     //hide the bloody toolbar
-    public void hideToolbar(View view){
-        if(toolbarHidden){
+    public void hideToolbar(View view) {
+        if (toolbarHidden) {
             getSupportActionBar().show();
             toolbarHidden = false;
-        }else {
+        } else {
             getSupportActionBar().hide();
             toolbarHidden = true;
         }
     }
 
-    public void blinkingAnimation(View view, int duration){
+    public void blinkingAnimation(View view, int duration) {
         final Animation animation = new AlphaAnimation(1, 0);
         animation.setDuration(duration);
         animation.setInterpolator(new LinearInterpolator());
@@ -395,7 +405,7 @@ public class Activity_LuckyWheel extends AppCompatActivity {
                 rl.setBackgroundDrawable(null);
                 rl.setBackgroundDrawable(background);
                 cursor.close();
-            }catch (Exception e){
+            } catch (Exception e) {
                 try {
                     Bitmap selected_image = getBitmapFromUri(selectedImage);
                     BitmapDrawable ob = new BitmapDrawable(getResources(), selected_image);
@@ -429,7 +439,7 @@ public class Activity_LuckyWheel extends AppCompatActivity {
     // Back to Main activity
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(Activity_LuckyWheel.this,Activity_Selection.class);
+        Intent intent = new Intent(Activity_LuckyWheel.this, Activity_Selection.class);
         startActivity(intent);
         finish();
     }
