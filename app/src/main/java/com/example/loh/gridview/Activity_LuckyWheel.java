@@ -277,6 +277,21 @@ public class Activity_LuckyWheel extends AppCompatActivity {
                     // Add winning sector indicator
                     sector = new WheelOfLuck_WinningSector(getApplicationContext(), null, sectorStartAngle, sweepAngle);
                     RelativeLayout rl = (RelativeLayout) findViewById(R.id.relativeLayout);
+                    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT
+                            , ViewGroup.LayoutParams.WRAP_CONTENT);
+                    if(getResources().getBoolean(R.bool.isTablet)){
+                        lp.setMargins((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 150, getResources().getDisplayMetrics()),
+                                (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 150, getResources().getDisplayMetrics()),
+                                (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 150, getResources().getDisplayMetrics()),
+                                (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 150, getResources().getDisplayMetrics()));
+                        /*float scale = getResources().getDisplayMetrics().density;
+                        lp.setMargins((int) (150*scale + 0.5f),
+                            (int) (150*scale + 0.5f),
+                            (int) (150*scale + 0.5f),
+                            (int) (150*scale + 0.5f));*/
+                    }
+
+                    sector.setLayoutParams(lp);
                     rl.addView(sector);
                     blinkingAnimation(sector, 100);
 
@@ -291,10 +306,10 @@ public class Activity_LuckyWheel extends AppCompatActivity {
                     rl.addView(tempPointer);
 
                     tempSpinner = new ImageButton(getApplicationContext());
-                    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, getResources().getDisplayMetrics())
+                    RelativeLayout.LayoutParams lp2 = new RelativeLayout.LayoutParams((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, getResources().getDisplayMetrics())
                             , (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, getResources().getDisplayMetrics()));
-                    lp.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
-                    tempSpinner.setLayoutParams(lp);
+                    lp2.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+                    tempSpinner.setLayoutParams(lp2);
                     tempSpinner.setBackgroundResource(R.mipmap.spinner);
                     rl.addView(tempSpinner);
                     tempSpinner.setOnTouchListener(spinnerOnTouchListener);
