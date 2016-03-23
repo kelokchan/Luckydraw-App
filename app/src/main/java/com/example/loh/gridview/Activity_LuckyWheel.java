@@ -125,7 +125,6 @@ public class Activity_LuckyWheel extends AppCompatActivity {
     View.OnTouchListener wheelOnTouchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-
             hideEffects();
 
             final float xc = wheelOfLuck.getWidth() / 2;
@@ -136,6 +135,7 @@ public class Activity_LuckyWheel extends AppCompatActivity {
 
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN: {
+                    hideEffects();
                     mCurrAngle = Math.toDegrees(Math.atan2(x - xc, yc - y));
                     initTime = System.currentTimeMillis();
                     break;
@@ -267,6 +267,7 @@ public class Activity_LuckyWheel extends AppCompatActivity {
         currAngle = toDegrees;
     }
 
+    List<WheelOfLuck_WinningSector> sectors = new ArrayList<WheelOfLuck_WinningSector>();
     public void showEffect() {
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -279,7 +280,7 @@ public class Activity_LuckyWheel extends AppCompatActivity {
                     RelativeLayout rl = (RelativeLayout) findViewById(R.id.relativeLayout);
                     RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT
                             , ViewGroup.LayoutParams.WRAP_CONTENT);
-                    if(getResources().getBoolean(R.bool.isTablet)){
+                    if (getResources().getBoolean(R.bool.isTablet)) {
                         lp.setMargins((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 150, getResources().getDisplayMetrics()),
                                 (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 150, getResources().getDisplayMetrics()),
                                 (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 150, getResources().getDisplayMetrics()),
@@ -294,6 +295,7 @@ public class Activity_LuckyWheel extends AppCompatActivity {
                     sector.setLayoutParams(lp);
                     rl.addView(sector);
                     blinkingAnimation(sector, 100);
+                    sectors.add(sector);
 
                     tempPointer = new ImageView(getApplicationContext());
                     RelativeLayout.LayoutParams lp1 = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT
@@ -332,7 +334,13 @@ public class Activity_LuckyWheel extends AppCompatActivity {
 
     public void hideEffects() {
         try {
-            if (sector != null) ((ViewManager) sector.getParent()).removeView(sector);
+            for(WheelOfLuck_WinningSector sector:sectors){
+                if (sector != null){
+                    ((ViewManager) sector.getParent()).removeView(sector);
+                    sectors.remove(sector);
+                    Log.e("sector"," deleted");
+                }
+            }
             if (tempSpinner != null) ((ViewManager) tempSpinner.getParent()).removeView(tempSpinner);
             if (tempPointer != null) ((ViewManager) tempPointer.getParent()).removeView(tempPointer);
         } catch (Exception e) {
