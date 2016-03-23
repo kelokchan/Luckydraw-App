@@ -338,7 +338,6 @@ public class Activity_LuckyWheel extends AppCompatActivity {
                 if (sector != null){
                     ((ViewManager) sector.getParent()).removeView(sector);
                     sectors.remove(sector);
-                    Log.e("sector"," deleted");
                 }
             }
             if (tempSpinner != null) ((ViewManager) tempSpinner.getParent()).removeView(tempSpinner);
