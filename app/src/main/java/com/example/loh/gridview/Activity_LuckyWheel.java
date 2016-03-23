@@ -87,7 +87,6 @@ public class Activity_LuckyWheel extends AppCompatActivity {
     SharedPreferences sharedPreferences;
     private DAOdb daOdb;
     List<DivisionItem> divisionItemList;
-    private WheelOfLuck_WinningSector sector;
     private ImageButton tempSpinner;
     private ImageView tempPointer;
 
@@ -276,7 +275,7 @@ public class Activity_LuckyWheel extends AppCompatActivity {
             public void run() {
                 try {
                     // Add winning sector indicator
-                    sector = new WheelOfLuck_WinningSector(getApplicationContext(), null, sectorStartAngle, sweepAngle);
+                    WheelOfLuck_WinningSector sector = new WheelOfLuck_WinningSector(getApplicationContext(), null, sectorStartAngle, sweepAngle);
                     RelativeLayout rl = (RelativeLayout) findViewById(R.id.relativeLayout);
                     RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT
                             , ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -335,10 +334,8 @@ public class Activity_LuckyWheel extends AppCompatActivity {
     public void hideEffects() {
         try {
             for(WheelOfLuck_WinningSector sector:sectors){
-                if (sector != null){
                     ((ViewManager) sector.getParent()).removeView(sector);
                     sectors.remove(sector);
-                }
             }
             if (tempSpinner != null) ((ViewManager) tempSpinner.getParent()).removeView(tempSpinner);
             if (tempPointer != null) ((ViewManager) tempPointer.getParent()).removeView(tempPointer);
