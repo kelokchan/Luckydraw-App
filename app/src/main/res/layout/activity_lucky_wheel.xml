@@ -79,6 +79,5 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:onClick="hideToolbar"
-        android:="@+id/imageView"
         android:layout_below="@+id/imageView"></LinearLayout>
 </RelativeLayout>

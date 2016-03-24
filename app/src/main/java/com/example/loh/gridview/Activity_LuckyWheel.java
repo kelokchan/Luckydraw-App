@@ -386,7 +386,6 @@ public class Activity_LuckyWheel extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.edit_luckywheel:
-                daOdb.deleteAllDivisionItems();
                 PhotoPickerIntent intent = new PhotoPickerIntent(Activity_LuckyWheel.this);
                 intent.setPhotoCount(16);
                 intent.setShowCamera(true);
@@ -444,6 +443,7 @@ public class Activity_LuckyWheel extends AppCompatActivity {
         // Open Gallery library to start edit wheel
         else if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
             if (data != null) {
+                daOdb.deleteAllDivisionItems();
                 ArrayList<String> photos = data.getStringArrayListExtra(PhotoPickerActivity.KEY_SELECTED_PHOTOS);
                 Intent intent = new Intent(this, Activity_Settings_WheelOfLuck_DivisionContent.class);
                 intent.putExtra("NUMBER_OF_DIVISION", photos.size());
