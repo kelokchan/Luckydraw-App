@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:onClick="hideToolbar"
     android:id="@+id/relativeLayout"
     android:animateLayoutChanges="true"
     tools:context="com.now.luckydrawapp.Activity_LuckyWheel">
@@ -69,5 +68,11 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_centerInParent="true" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/imageView"
+        android:onClick="hideToolbar"></LinearLayout>
 
 </RelativeLayout>

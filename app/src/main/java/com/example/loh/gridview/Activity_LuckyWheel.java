@@ -16,7 +16,6 @@ import android.os.Handler;
 import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -75,6 +74,7 @@ public class Activity_LuckyWheel extends AppCompatActivity {
     private int mSeriesIndex;
     // To hold angle when spin ends
     private double currAngle = 0;
+
     private static String backgroundPath;
     private static final String PREFERENCE_NAME = "SETTINGS";
     private static final String BACKGROUND_KEY = "WHEEL_BACKGROUND";
@@ -104,7 +104,8 @@ public class Activity_LuckyWheel extends AppCompatActivity {
         divisionItemList = daOdb.getDivisionItems();
         Bundle bundle = getIntent().getExtras();
         //divisionItemList = (ArrayList<DivisionItem>)bundle.getSerializable("value");
-        currAngle=0;sweepAngle=(float)360 / divisionItemList.size();
+        currAngle = 0;
+        sweepAngle = (float) 360 / divisionItemList.size();
         wheelOfLuck.setDivisionItems(divisionItemList);
 
         spinner.setOnTouchListener(spinnerOnTouchListener);
@@ -122,6 +123,7 @@ public class Activity_LuckyWheel extends AppCompatActivity {
     private float sweepAngle;
     // Lucky Wheel onTouch
     View.OnTouchListener wheelOnTouchListener = new View.OnTouchListener() {
+
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             hideEffects();
@@ -158,7 +160,6 @@ public class Activity_LuckyWheel extends AppCompatActivity {
                         if (mPrevAngle > mCurrAngle) {
                             mStopAngle = -mStopAngle;
                             sectorStartAngle = (float) (((mStopAngle / 10) % 360));
-                            Log.e("da", sectorStartAngle + "");
                             while ((sectorStartAngle - sweepAngle) < -90)
                                 sectorStartAngle += sweepAngle;
                             sectorStartAngle -= 2 * sweepAngle;
@@ -267,6 +268,7 @@ public class Activity_LuckyWheel extends AppCompatActivity {
     }
 
     List<WheelOfLuck_WinningSector> sectors = new ArrayList<WheelOfLuck_WinningSector>();
+
     public void showEffect() {
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -329,16 +331,30 @@ public class Activity_LuckyWheel extends AppCompatActivity {
                 }
             }
         }, 500);
+
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }.start();
+
     }
 
     public void hideEffects() {
         try {
-            for(WheelOfLuck_WinningSector sector:sectors){
-                    ((ViewManager) sector.getParent()).removeView(sector);
-                    sectors.remove(sector);
+            for (WheelOfLuck_WinningSector sector : sectors) {
+                ((ViewManager) sector.getParent()).removeView(sector);
+                sectors.remove(sector);
             }
-            if (tempSpinner != null) ((ViewManager) tempSpinner.getParent()).removeView(tempSpinner);
-            if (tempPointer != null) ((ViewManager) tempPointer.getParent()).removeView(tempPointer);
+            if (tempSpinner != null)
+                ((ViewManager) tempSpinner.getParent()).removeView(tempSpinner);
+            if (tempPointer != null)
+                ((ViewManager) tempPointer.getParent()).removeView(tempPointer);
         } catch (Exception e) {
         }
 
