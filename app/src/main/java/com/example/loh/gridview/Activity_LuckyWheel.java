@@ -268,7 +268,7 @@ public class Activity_LuckyWheel extends AppCompatActivity {
     }
 
     List<WheelOfLuck_WinningSector> sectors = new ArrayList<WheelOfLuck_WinningSector>();
-
+    List<ImageButton> spinners = new ArrayList<ImageButton>();
     public void showEffect() {
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -316,6 +316,7 @@ public class Activity_LuckyWheel extends AppCompatActivity {
                     tempSpinner.setBackgroundResource(R.mipmap.spinner);
                     rl.addView(tempSpinner);
                     tempSpinner.setOnTouchListener(spinnerOnTouchListener);
+                    spinners.add(tempSpinner);
 
                     MediaPlayer musicPlayer = MediaPlayer.create(getApplicationContext(), R.raw.congrats);
                     gifImageView.setVisibility(View.VISIBLE);
@@ -331,17 +332,6 @@ public class Activity_LuckyWheel extends AppCompatActivity {
                 }
             }
         }, 500);
-
-        new Thread() {
-            @Override
-            public void run() {
-                try {
-                    sleep(5000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }.start();
 
     }
 
