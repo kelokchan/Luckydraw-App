@@ -16,6 +16,7 @@ import android.os.Handler;
 import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -50,6 +51,7 @@ import me.iwf.photopicker.PhotoPickerActivity;
 import me.iwf.photopicker.utils.PhotoPickerIntent;
 import pl.droidsonroids.gif.GifImageView;
 
+
 public class Activity_LuckyWheel extends AppCompatActivity {
     private static final int RESULT_LOAD_BACKGROUND = 1234;
     private static final int REQUEST_CODE = 12345;
@@ -59,6 +61,8 @@ public class Activity_LuckyWheel extends AppCompatActivity {
     WheelOfLuck wheelOfLuck;
     @Bind(R.id.spinner)
     ImageButton spinner;
+    @Bind(R.id.pointer)
+    ImageView pointer;
     @Bind(R.id.imgview_wheel_bg)
     ImageView wheel_bg;
     private double mCurrAngle = 0;
@@ -87,8 +91,6 @@ public class Activity_LuckyWheel extends AppCompatActivity {
     SharedPreferences sharedPreferences;
     private DAOdb daOdb;
     List<DivisionItem> divisionItemList;
-    private ImageButton tempSpinner;
-    private ImageView tempPointer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -281,7 +283,16 @@ public class Activity_LuckyWheel extends AppCompatActivity {
                     RelativeLayout rl = (RelativeLayout) findViewById(R.id.relativeLayout);
                     RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT
                             , ViewGroup.LayoutParams.WRAP_CONTENT);
-                    if (getResources().getBoolean(R.bool.isTablet)) {
+                    DisplayMetrics dm = getApplicationContext().getResources().getDisplayMetrics();
+                    float screenWidth = dm.widthPixels / dm.xdpi;
+                    float screenHeight = dm.heightPixels / dm.ydpi;
+
+                    if(Math.min(screenWidth,screenHeight)<=800){
+                        lp.setMargins((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 75, getResources().getDisplayMetrics()),
+                                (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 75, getResources().getDisplayMetrics()),
+                                (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 75, getResources().getDisplayMetrics()),
+                                (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 75, getResources().getDisplayMetrics()));
+                    } else if (getResources().getBoolean(R.bool.isTablet)) {
                         lp.setMargins((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 150, getResources().getDisplayMetrics()),
                                 (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 150, getResources().getDisplayMetrics()),
                                 (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 150, getResources().getDisplayMetrics()),
@@ -298,25 +309,8 @@ public class Activity_LuckyWheel extends AppCompatActivity {
                     blinkingAnimation(sector, 100);
                     sectors.add(sector);
 
-                    tempPointer = new ImageView(getApplicationContext());
-                    RelativeLayout.LayoutParams lp1 = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT
-                            , ViewGroup.LayoutParams.WRAP_CONTENT);
-                    lp1.setMargins(0, 0, 0, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 67, getResources().getDisplayMetrics()));
-                    lp1.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE);
-                    lp1.addRule(RelativeLayout.ALIGN_BOTTOM, R.id.spinner);
-                    tempPointer.setLayoutParams(lp1);
-                    tempPointer.setImageResource(R.mipmap.pointer);
-                    rl.addView(tempPointer);
-
-                    tempSpinner = new ImageButton(getApplicationContext());
-                    RelativeLayout.LayoutParams lp2 = new RelativeLayout.LayoutParams((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, getResources().getDisplayMetrics())
-                            , (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, getResources().getDisplayMetrics()));
-                    lp2.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
-                    tempSpinner.setLayoutParams(lp2);
-                    tempSpinner.setBackgroundResource(R.mipmap.spinner);
-                    rl.addView(tempSpinner);
-                    tempSpinner.setOnTouchListener(spinnerOnTouchListener);
-                    spinners.add(tempSpinner);
+                    pointer.bringToFront();
+                    spinner.bringToFront();
 
                     MediaPlayer musicPlayer = MediaPlayer.create(getApplicationContext(), R.raw.congrats);
                     gifImageView.setVisibility(View.VISIBLE);
@@ -341,10 +335,6 @@ public class Activity_LuckyWheel extends AppCompatActivity {
                 ((ViewManager) sector.getParent()).removeView(sector);
                 sectors.remove(sector);
             }
-            if (tempSpinner != null)
-                ((ViewManager) tempSpinner.getParent()).removeView(tempSpinner);
-            if (tempPointer != null)
-                ((ViewManager) tempPointer.getParent()).removeView(tempPointer);
         } catch (Exception e) {
         }
 
